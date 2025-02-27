@@ -1,0 +1,45 @@
+definitions:
+  categorydto.CreateCategoryDTO:
+    properties:
+      name:
+        type: string
+    required:
+    - name
+    type: object
+info:
+  contact:
+    email: fiber@swagger.io
+    name: API Support
+  description: This is a sample swagger for Fiber
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Fiber Example API
+  version: "1.0"
+paths:
+  /category:
+    post:
+      description: Create Category
+      parameters:
+      - description: Payload to create
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/categorydto.CreateCategoryDTO'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Create Category
+      tags:
+      - Category
+securityDefinitions:
+  BearerAuth:
+    description: Type "Bearer" followed by a space and JWT token.
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
