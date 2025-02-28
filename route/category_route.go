@@ -15,5 +15,8 @@ func SetupCategoryController(app *fiber.App) {
 
 	// Tambahkan route ke dalam group
 	v2.Post("/", c.CreateCategory)
+	v2.Put("/:categoryId", c.UpdateCategory)
+	v2.Get("/", c.GetCategoryOptions)
+	v2.Delete("/", c.BulkDeleteCategories)
 
 }

@@ -1,12 +1,15 @@
 package categorycontroller
 
 import (
-	dto "be-shop-vision/dto/category"
+	"be-shop-vision/dto"
+	categorydto "be-shop-vision/dto/category"
 	usecase "be-shop-vision/usecase/category_usecase"
 	"be-shop-vision/util"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/susatyo441/go-ta-utils/functions"
 	"github.com/susatyo441/go-ta-utils/middleware"
+	"github.com/susatyo441/go-ta-utils/parser"
 	"github.com/susatyo441/go-ta-utils/response"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
@@ -28,22 +31,107 @@ func MakeCategoryController(makeUseCaseFunc makeCategoryUseCaseFunc) *CategoryCo
 // @Tags Category
 // @Produce  json
 // @Router /category [post]
-// @Param payload body dto.CreateCategoryDTO true "Payload to create"
+// @Param payload body categorydto.CreateCategoryDTO true "Payload to create"
 // @Security BearerAuth
 func (ctrl *CategoryController) CreateCategory(ctx *fiber.Ctx) error {
-	var payload dto.CreateCategoryDTO
+	var payload categorydto.CreateCategoryDTO
 	ctx.BodyParser(&payload)
 	if err := util.ValidateStruct(payload); err != nil {
 		return response.BadRequest(ctx, err.Error(), nil)
 	}
 	ctrl.UseCase = ctrl.MakeUseCaseFunction()
-	userId := ctx.Locals(middleware.UserKey).(primitive.ObjectID)
+
 	storeId := ctx.Locals(middleware.StoreKey).(primitive.ObjectID)
 
-	err := ctrl.UseCase.CreateCategory(ctx.Context(), payload, userId, storeId)
+	err := ctrl.UseCase.CreateCategory(ctx.Context(), payload, storeId)
 	if err != nil {
 		return response.SendResponse(ctx, err.Code, nil, err.Message)
 	}
 
 	return response.Created(ctx, "Successfully create category", nil)
+}
+
+// UpdateCategory godoc
+// @Summary Update Category
+// @Description Update Category
+// @Tags Category
+// @Produce  json
+// @Router /category/{categoryId} [put]
+// @Param categoryId path string true "Category ID"
+// @Param payload body categorydto.CreateCategoryDTO true "Payload to update"
+// @Security BearerAuth
+func (ctrl *CategoryController) UpdateCategory(ctx *fiber.Ctx) error {
+	var payload categorydto.CreateCategoryDTO
+	ctx.BodyParser(&payload)
+	if err := util.ValidateStruct(payload); err != nil {
+		return response.BadRequest(ctx, err.Error(), nil)
+	}
+
+	categoryId, paramErr := functions.ParamToObjectID(ctx, "categoryId")
+	if paramErr != nil {
+		return response.BadRequest(ctx, "Invalid category id format", nil)
+	}
+	storeId := ctx.Locals(middleware.StoreKey).(primitive.ObjectID)
+
+	err := ctrl.UseCase.UpdateCategory(ctx.Context(), payload, categoryId, storeId)
+	if err != nil {
+		return response.SendResponse(ctx, err.Code, nil, err.Message)
+	}
+
+	return response.Success(ctx, "Successfully update category", nil)
+}
+
+// GetCategoryOptions godoc
+// @Summary Get Category Option
+// @Description Get Category Option
+// @Tags Category
+// @Produce  json
+// @Router /category [get]
+// @Param q query dto.PaginationQuery false "Query"
+// @Security BearerAuth
+func (ctrl *CategoryController) GetCategoryOptions(ctx *fiber.Ctx) error {
+	// parse the request query
+	rawQuery := ctx.Queries()
+	query, _ := parser.ParseQuery[dto.PaginationQuery](rawQuery)
+
+	// validate parsed query
+	if err := util.ValidateStruct(query); err != nil {
+		return response.BadRequest(ctx, err.Error(), nil)
+	}
+
+	ctrl.UseCase = ctrl.MakeUseCaseFunction()
+
+	storeId := ctx.Locals(middleware.StoreKey).(primitive.ObjectID)
+
+	result, err := ctrl.UseCase.GetCategoryOptions(ctx.Context(), storeId, *query)
+	if err != nil {
+		return response.SendResponse(ctx, err.Code, nil, err.Message)
+	}
+
+	return response.Success(ctx, "Successfully get category options", result)
+}
+
+// BulkDeleteCategories godoc
+// @Summary Bulk Delete Categories
+// @Description Bulk Delete Categories
+// @Tags Category
+// @Produce  json
+// @Router /category [delete]
+// @Param payload body dto.ArrayOfIdDTO true "Payload to delete"
+// @Security BearerAuth
+func (ctrl *CategoryController) BulkDeleteCategories(ctx *fiber.Ctx) error {
+	var payload dto.ArrayOfIdDTO
+	ctx.BodyParser(&payload)
+	if err := util.ValidateStruct(payload); err != nil {
+		return response.BadRequest(ctx, err.Error(), nil)
+	}
+
+	storeId := ctx.Locals(middleware.StoreKey).(primitive.ObjectID)
+
+	err := ctrl.UseCase.BulkDeleteCategories(ctx.Context(), payload, storeId)
+	if err != nil {
+		return response.SendResponse(ctx, err.Code, nil, err.Message)
+	}
+
+	return response.Success(ctx, "Successfully delete categories", nil)
 }

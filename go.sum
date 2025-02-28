@@ -102,6 +102,8 @@ github.com/susatyo441/go-ta-utils v0.0.0-20250227064004-5cc8d8503b4f h1:q1jY7tKH
 github.com/susatyo441/go-ta-utils v0.0.0-20250227064004-5cc8d8503b4f/go.mod h1:VoB+L6AIf0tRFFseAfxsUD6Nsl4pDansjBEe1iSKw0g=
 github.com/susatyo441/go-ta-utils v0.0.0-20250227074751-163839b98945 h1:oH+oM/Uw1gnQYWBAy3P0xVOtK1DWE8fOM1OCiz/UczA=
 github.com/susatyo441/go-ta-utils v0.0.0-20250227074751-163839b98945/go.mod h1:VoB+L6AIf0tRFFseAfxsUD6Nsl4pDansjBEe1iSKw0g=
+github.com/susatyo441/go-ta-utils v0.0.0-20250228061501-6fc339cc8b7f h1:Uplf8+/iIHErb7KgzdSB1r8BnVEnHBr4DDtiirVZL4A=
+github.com/susatyo441/go-ta-utils v0.0.0-20250228061501-6fc339cc8b7f/go.mod h1:VoB+L6AIf0tRFFseAfxsUD6Nsl4pDansjBEe1iSKw0g=
 github.com/swaggo/files/v2 v2.0.0 h1:hmAt8Dkynw7Ssz46F6pn8ok6YmGZqHSVLZ+HQM7i0kw=
 github.com/swaggo/files/v2 v2.0.0/go.mod h1:24kk2Y9NYEJ5lHuCra6iVwkMjIekMCaFq/0JQj66kyM=
 github.com/swaggo/files/v2 v2.0.2 h1:Bq4tgS/yxLB/3nwOMcul5oLEUKa877Ykgz3CJMVbQKU=

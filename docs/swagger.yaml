@@ -6,6 +6,14 @@ definitions:
     required:
     - name
     type: object
+  dto.ArrayOfIdDTO:
+    properties:
+      ids:
+        description: Optional list of category IDs
+        items:
+          type: string
+        type: array
+    type: object
 info:
   contact:
     email: fiber@swagger.io
@@ -19,6 +27,51 @@ info:
   version: "1.0"
 paths:
   /category:
+    delete:
+      description: Bulk Delete Categories
+      parameters:
+      - description: Payload to delete
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ArrayOfIdDTO'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Bulk Delete Categories
+      tags:
+      - Category
+    get:
+      description: Get Category Option
+      parameters:
+      - in: query
+        minimum: 0
+        name: limit
+        type: integer
+      - in: query
+        minimum: 0
+        name: page
+        type: integer
+      - in: query
+        name: search
+        type: string
+      - in: query
+        name: sortBy
+        type: string
+      - in: query
+        name: sortOrder
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get Category Option
+      tags:
+      - Category
     post:
       description: Create Category
       parameters:
@@ -34,6 +87,29 @@ paths:
       security:
       - BearerAuth: []
       summary: Create Category
+      tags:
+      - Category
+  /category/{categoryId}:
+    put:
+      description: Update Category
+      parameters:
+      - description: Category ID
+        in: path
+        name: categoryId
+        required: true
+        type: string
+      - description: Payload to update
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/categorydto.CreateCategoryDTO'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Update Category
       tags:
       - Category
 securityDefinitions:
