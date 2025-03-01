@@ -9,4 +9,5 @@ func SetupRoute(app *fiber.App) {
 	app.Use(middleware.ValidateJWT())
 
 	SetupCategoryController(app)
+	SetupProductController(app)
 }

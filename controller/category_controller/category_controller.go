@@ -67,6 +67,7 @@ func (ctrl *CategoryController) UpdateCategory(ctx *fiber.Ctx) error {
 		return response.BadRequest(ctx, err.Error(), nil)
 	}
 
+	ctrl.UseCase = ctrl.MakeUseCaseFunction()
 	categoryId, paramErr := functions.ParamToObjectID(ctx, "categoryId")
 	if paramErr != nil {
 		return response.BadRequest(ctx, "Invalid category id format", nil)
@@ -125,6 +126,8 @@ func (ctrl *CategoryController) BulkDeleteCategories(ctx *fiber.Ctx) error {
 	if err := util.ValidateStruct(payload); err != nil {
 		return response.BadRequest(ctx, err.Error(), nil)
 	}
+
+	ctrl.UseCase = ctrl.MakeUseCaseFunction()
 
 	storeId := ctx.Locals(middleware.StoreKey).(primitive.ObjectID)
 
