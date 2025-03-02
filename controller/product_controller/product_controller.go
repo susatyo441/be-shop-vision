@@ -197,7 +197,7 @@ func (ctrl *ProductController) GetProductDetail(ctx *fiber.Ctx) error {
 // GetProductList godoc
 // @Summary Get Products list
 // @Description Get Products list
-// @Tags Skus
+// @Tags Product
 // @Produce  json
 // @Router /product [get]
 // @Param q query dto.PaginationQuery false "Query"

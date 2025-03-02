@@ -5,6 +5,7 @@ type CreateProductDTO struct {
 	Name       string `json:"name" bson:"name" validate:"required"`
 	Price      int    `json:"price" bson:"price" validate:"required, gte=0"`
 	CoverPhoto int    `json:"coverPhoto" bson:"coverPhoto" validate:"required,gte=1,lte=5"`
+	Stock      int    `json:"stock" bson:"stock" validate:"required,gte=0"`
 }
 
 type ProductPhotosDTO struct {
@@ -20,5 +21,6 @@ type UpdateProductDTO struct {
 	Name       string           `json:"name" bson:"name" validate:"required"`
 	CoverPhoto int              `json:"coverPhoto" bson:"coverPhoto" validate:"required,gte=1,lte=5"`
 	Photos     ProductPhotosDTO `json:"photos"`
-	Price      int              `json:"price" bson:"price" validate:"required, gte=0"`
+	Price      int              `json:"price" bson:"price" validate:"required,gte=0"`
+	Stock      int              `json:"stock" bson:"stock" validate:"required,gte=0"`
 }

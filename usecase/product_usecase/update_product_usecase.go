@@ -73,6 +73,7 @@ func (uc *ProductUseCase) UpdateProduct(ctx context.Context, productID primitive
 		"category":   model.AttributeEmbedded{ID: &category.ID, Name: &category.Name},
 		"coverPhoto": coverPhoto,
 		"price":      body.Price,
+		"stock":      body.Stock,
 	}
 
 	// Lakukan update produk

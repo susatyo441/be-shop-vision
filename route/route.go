@@ -10,4 +10,5 @@ func SetupRoute(app *fiber.App) {
 
 	SetupCategoryController(app)
 	SetupProductController(app)
+	SetupTransactionController(app)
 }

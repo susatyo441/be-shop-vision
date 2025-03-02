@@ -38,7 +38,7 @@ func (uc *ProductUseCase) CreateProduct(ctx context.Context, body dto.CreateProd
 		Name:       body.Name,
 		StoreID:    storeID,
 		Category:   model.AttributeEmbedded{ID: &category.ID, Name: &category.Name},
-		Stock:      0,
+		Stock:      body.Stock,
 		CoverPhoto: coverPhoto,
 		Price:      body.Price,
 	}
