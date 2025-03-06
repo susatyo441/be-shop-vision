@@ -40,6 +40,7 @@ func (uc *ProductUseCase) GetProductDetail(ctx context.Context, productID primit
 		"stock":      product.Stock,
 		"coverPhoto": product.CoverPhoto,
 		"photos":     productPhotos,
+		"price":      product.Price,
 	}
 
 	return productDetail, nil

@@ -106,6 +106,14 @@ github.com/susatyo441/go-ta-utils v0.0.0-20250228061501-6fc339cc8b7f h1:Uplf8+/i
 github.com/susatyo441/go-ta-utils v0.0.0-20250228061501-6fc339cc8b7f/go.mod h1:VoB+L6AIf0tRFFseAfxsUD6Nsl4pDansjBEe1iSKw0g=
 github.com/susatyo441/go-ta-utils v0.0.0-20250301142749-c6481c74f37f h1:sYaqcvUHUAv1kUZ99GnDw+xeIBB6DLssDjT+1mZW5mw=
 github.com/susatyo441/go-ta-utils v0.0.0-20250301142749-c6481c74f37f/go.mod h1:VoB+L6AIf0tRFFseAfxsUD6Nsl4pDansjBEe1iSKw0g=
+github.com/susatyo441/go-ta-utils v0.0.0-20250305082942-b1a0b0ce0e68 h1:XQ2ygkJqXAI++a2y0/+5lEYyvInm5o8BAse1FOEL4lE=
+github.com/susatyo441/go-ta-utils v0.0.0-20250305082942-b1a0b0ce0e68/go.mod h1:VoB+L6AIf0tRFFseAfxsUD6Nsl4pDansjBEe1iSKw0g=
+github.com/susatyo441/go-ta-utils v0.0.0-20250305084012-ceabb2ee1378 h1:GuJ18zcWUQyvrP4JXOCteTD+UTOG3rEDxitMqdiSKWs=
+github.com/susatyo441/go-ta-utils v0.0.0-20250305084012-ceabb2ee1378/go.mod h1:VoB+L6AIf0tRFFseAfxsUD6Nsl4pDansjBEe1iSKw0g=
+github.com/susatyo441/go-ta-utils v0.0.0-20250306170901-2b10db6ded99 h1:3Qk5zTSA46NXlwXivEcG4uLSnlGcMJQKSc7bs6JxeM4=
+github.com/susatyo441/go-ta-utils v0.0.0-20250306170901-2b10db6ded99/go.mod h1:VoB+L6AIf0tRFFseAfxsUD6Nsl4pDansjBEe1iSKw0g=
+github.com/susatyo441/go-ta-utils v0.0.0-20250306171611-a75480f01047 h1:RI1xSRljvIS0UReWxzwdqCiVFI2H+dBYYMguSzPvL80=
+github.com/susatyo441/go-ta-utils v0.0.0-20250306171611-a75480f01047/go.mod h1:VoB+L6AIf0tRFFseAfxsUD6Nsl4pDansjBEe1iSKw0g=
 github.com/swaggo/files/v2 v2.0.0 h1:hmAt8Dkynw7Ssz46F6pn8ok6YmGZqHSVLZ+HQM7i0kw=
 github.com/swaggo/files/v2 v2.0.0/go.mod h1:24kk2Y9NYEJ5lHuCra6iVwkMjIekMCaFq/0JQj66kyM=
 github.com/swaggo/files/v2 v2.0.2 h1:Bq4tgS/yxLB/3nwOMcul5oLEUKa877Ykgz3CJMVbQKU=

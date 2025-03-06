@@ -12,39 +12,56 @@ import (
 )
 
 func (uc *TransactionUseCase) CreateTransaction(ctx context.Context, body dto.CreateTransactionDTO, storeID primitive.ObjectID) *entity.HttpError {
-	productObjectID, _ := primitive.ObjectIDFromHex(body.ProductID)
+	var transactionProductAttr []model.TransactionProductAttribute
+	totalPrice := 0
+	for _, productDTO := range body.Data {
+		productObjectID, _ := primitive.ObjectIDFromHex(productDTO.ProductID)
 
-	product, err := uc.ProductService.FindOne(ctx, bson.M{"_id": productObjectID, "storeId": storeID})
-	if err != nil {
-		if err == mongo.ErrNoDocuments {
-			return entity.BadRequest("Product tidak ditemukan")
+		product, err := uc.ProductService.FindOne(ctx, bson.M{"_id": productObjectID, "storeId": storeID})
+		if err != nil {
+			if err == mongo.ErrNoDocuments {
+				return entity.BadRequest("Product tidak ditemukan")
+			}
+			return entity.InternalServerError(err.Error())
 		}
-		return entity.InternalServerError(err.Error())
-	}
 
-	if product.Stock < body.Quantity {
-		return entity.BadRequest("Stock tidak mencukupi")
+		if product.Stock < productDTO.Quantity {
+			return entity.BadRequest("Stock tidak mencukupi")
+		}
+		totalPriceProduct := product.Price * productDTO.Quantity
+		transactionProductAttr = append(transactionProductAttr, model.TransactionProductAttribute{
+			ID:   product.ID,
+			Name: product.Name,
+			Category: model.AttributeEmbedded{
+				ID:   product.Category.ID,
+				Name: product.Category.Name,
+			},
+			Price:      product.Price,
+			Quantity:   productDTO.Quantity,
+			TotalPrice: totalPriceProduct,
+		})
+		totalPrice += totalPriceProduct
 	}
 
 	transaction := model.Transaction{
 		ID:         primitive.NewObjectID(),
-		Product:    model.AttributeEmbedded{ID: &product.ID, Name: &product.Name},
-		Category:   model.AttributeEmbedded{ID: product.Category.ID, Name: product.Category.Name},
-		Price:      product.Price,
-		Quantity:   body.Quantity,
-		TotalPrice: product.Price * body.Quantity,
+		Products:   transactionProductAttr,
+		TotalPrice: totalPrice,
 		StoreID:    storeID,
 	}
 
-	_, err = uc.TransactionService.Create(ctx, transaction)
+	_, err := uc.TransactionService.Create(ctx, transaction)
 
 	if err != nil {
 		return entity.InternalServerError(err.Error())
 	}
 
-	_, err = uc.ProductService.UpdateOne(ctx, bson.M{"_id": product.ID}, bson.M{"$inc": bson.M{"stock": -body.Quantity}})
-	if err != nil {
-		return entity.InternalServerError(err.Error())
+	for _, productDTO := range body.Data {
+		productObjectID, _ := primitive.ObjectIDFromHex(productDTO.ProductID)
+		_, err = uc.ProductService.UpdateOne(ctx, bson.M{"_id": productObjectID}, bson.M{"$inc": bson.M{"stock": -productDTO.Quantity}})
+		if err != nil {
+			return entity.InternalServerError(err.Error())
+		}
 	}
 
 	return nil

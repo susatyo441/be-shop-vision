@@ -4,6 +4,7 @@ import (
 	"be-shop-vision/dto"
 	productdto "be-shop-vision/dto/product"
 	"context"
+	"mime/multipart"
 
 	"github.com/susatyo441/go-ta-utils/db"
 	utilDto "github.com/susatyo441/go-ta-utils/dto"
@@ -14,9 +15,9 @@ import (
 )
 
 type IProductUseCase interface {
-	CreateProduct(ctx context.Context, body productdto.CreateProductDTO, storeID primitive.ObjectID, photos []string) *entity.HttpError
+	CreateProduct(ctx context.Context, body productdto.CreateProductDTO, storeID primitive.ObjectID, files map[string]*multipart.FileHeader) *entity.HttpError
 	BulkDeleteProducts(ctx context.Context, body dto.ArrayOfIdDTO, storeID primitive.ObjectID) *entity.HttpError
-	UpdateProduct(ctx context.Context, productID primitive.ObjectID, body productdto.UpdateProductDTO, storeID primitive.ObjectID) *entity.HttpError
+	UpdateProduct(ctx context.Context, productID primitive.ObjectID, body productdto.UpdateProductDTO, storeID primitive.ObjectID, files map[string]*multipart.FileHeader) *entity.HttpError
 	GetProductDetail(ctx context.Context, productID primitive.ObjectID, storeID primitive.ObjectID) (interface{}, *entity.HttpError)
 	GetProductList(ctx context.Context, query dto.PaginationQuery, storeID primitive.ObjectID) (*utilDto.PaginationResult[model.Product], *entity.HttpError)
 }

@@ -5,6 +5,7 @@ import (
 	productdto "be-shop-vision/dto/product"
 	usecase "be-shop-vision/usecase/product_usecase"
 	"be-shop-vision/util"
+	"mime/multipart"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/susatyo441/go-ta-utils/functions"
@@ -35,31 +36,19 @@ func MakeProductController(makeUseCaseFunc makeProductUseCaseFunc) *ProductContr
 // @Security BearerAuth
 func (ctrl *ProductController) CreateProduct(ctx *fiber.Ctx) error {
 
-	var images []string
-
-	// Ambil gambar dari ctx.Locals
-	rawImages := []interface{}{
-		ctx.Locals(middleware.ContextKey("firstImage")),
-		ctx.Locals(middleware.ContextKey("secondImage")),
-		ctx.Locals(middleware.ContextKey("thirdImage")),
-		ctx.Locals(middleware.ContextKey("fourthImage")),
-		ctx.Locals(middleware.ContextKey("fifthImage")),
+	// Ambil semua file dari form
+	files := map[string]*multipart.FileHeader{}
+	attributes := []string{"image1", "image2", "image3", "image4", "image5"}
+	for _, attr := range attributes {
+		fileHeader, err := ctx.FormFile(attr)
+		if err == nil { // File ada
+			files[attr] = fileHeader
+		}
 	}
 
-	// Cek apakah ada yang nil
-	for _, rawImage := range rawImages {
-		if rawImage == nil {
-			response.BadRequest(ctx, "Semua gambar harus diunggah", nil)
-
-		}
-
-		// Konversi ke string dan tambahkan ke slice images
-		imageStr, ok := rawImage.(string)
-		if !ok {
-			response.BadRequest(ctx, "Format gambar tidak valid", nil)
-
-		}
-		images = append(images, imageStr)
+	// Validasi jumlah file harus pas 5
+	if len(files) != 5 {
+		return response.BadRequest(ctx, "Jumlah foto harus 5", nil)
 	}
 
 	var payload productdto.CreateProductDTO
@@ -71,7 +60,7 @@ func (ctrl *ProductController) CreateProduct(ctx *fiber.Ctx) error {
 
 	storeId := ctx.Locals(middleware.StoreKey).(primitive.ObjectID)
 
-	err := ctrl.UseCase.CreateProduct(ctx.Context(), payload, storeId, images)
+	err := ctrl.UseCase.CreateProduct(ctx.Context(), payload, storeId, files)
 	if err != nil {
 		return response.SendResponse(ctx, err.Code, nil, err.Message)
 	}
@@ -139,28 +128,17 @@ func (ctrl *ProductController) UpdateProduct(ctx *fiber.Ctx) error {
 		return response.BadRequest(ctx, "Invalid store ID", nil)
 	}
 
-	// Pastikan ctx.Locals tidak nil sebelum melakukan type assertion
-	getLocal := func(key string) string {
-		if val := ctx.Locals(middleware.ContextKey(key)); val != nil {
-			if strVal, ok := val.(string); ok {
-				return strVal
-			}
+	files := map[string]*multipart.FileHeader{}
+	attributes := []string{"image1", "image2", "image3", "image4", "image5"}
+	for _, attr := range attributes {
+		if fileHeader, err := ctx.FormFile(attr); err == nil {
+			files[attr] = fileHeader
 		}
-		return ""
-	}
-
-	// Isi Photos dalam payload jika ada perubahan gambar
-	payload.Photos = productdto.ProductPhotosDTO{
-		FirstImage:  getLocal("firstImage"),
-		SecondImage: getLocal("secondImage"),
-		ThirdImage:  getLocal("thirdImage"),
-		FourthImage: getLocal("fourthImage"),
-		FifthImage:  getLocal("fifthImage"),
 	}
 
 	// Panggil UseCase untuk update produk
 	ctrl.UseCase = ctrl.MakeUseCaseFunction()
-	err := ctrl.UseCase.UpdateProduct(ctx.Context(), productId, payload, storeId)
+	err := ctrl.UseCase.UpdateProduct(ctx.Context(), productId, payload, storeId, files)
 	if err != nil {
 		return response.SendResponse(ctx, err.Code, nil, err.Message)
 	}

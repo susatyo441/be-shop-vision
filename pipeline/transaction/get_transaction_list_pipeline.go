@@ -18,10 +18,29 @@ func GetTransactionPipeline(query dto.PaginationQuery, storeID primitive.ObjectI
 	}
 
 	return pipeline.NewPipelineBuilder().
+		Unwind(bson.M{"path": "$products", "preserveNullAndEmptyArrays": true}).
+		Project(bson.M{
+			"_id":        1,
+			"totalPrice": 1,
+			"storeId":    1,
+			"createdAt":  1,
+			"updatedAt":  1,
+			"product": bson.M{
+				"_id":   "$products._id",
+				"name":  "$products.name",
+				"price": "$products.price",
+				"category": bson.M{
+					"_id":  "$products.category._id",
+					"name": "$products.category.name",
+				},
+				"totalPrice": "$products.totalPrice",
+				"quantity":   "$products.quantity",
+			},
+		}).
 		Match(bson.M{
 			"$or": bson.A{
 				bson.M{"product.name": pipeline.GenerateSearchCondition(query.Search)},
-				bson.M{"category.name": pipeline.GenerateSearchCondition(query.Search)},
+				bson.M{"product.category.name": pipeline.GenerateSearchCondition(query.Search)},
 			},
 		}).
 		Pagination(paginationQuery).
