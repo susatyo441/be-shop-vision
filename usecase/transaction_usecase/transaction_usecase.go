@@ -16,6 +16,7 @@ import (
 type ITransactionUseCase interface {
 	CreateTransaction(ctx context.Context, body transactiondto.CreateTransactionDTO, storeID primitive.ObjectID) *entity.HttpError
 	GetTransactionList(ctx context.Context, query dto.PaginationQuery, storeID primitive.ObjectID) (*utilDto.PaginationResult[transactiondto.TransactionAggregateDto], *entity.HttpError)
+	GetTransactionSummary(ctx context.Context, storeID primitive.ObjectID) (*transactiondto.TransactionSummaryDTO, *entity.HttpError)
 }
 
 type TransactionUseCase struct {

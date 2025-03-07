@@ -33,3 +33,23 @@ func (u *TransactionUseCase) GetTransactionList(ctx context.Context, query dto.P
 	// return the first aggregation result
 	return &response, nil
 }
+
+func (u *TransactionUseCase) GetTransactionSummary(ctx context.Context, storeID primitive.ObjectID) (*transactiondto.TransactionSummaryDTO, *entity.HttpError) {
+
+	var result []transactiondto.TransactionSummaryDTO
+
+	// perform the aggregation query and handle any errors that occur during the process
+	aggregateErr := u.TransactionService.Aggregate(
+		&result,
+		ctx,
+		transactionpipeline.GetTransactionSummaryPipeline(storeID),
+		options.Aggregate().SetCollation(&options.Collation{Strength: 3, Locale: "en"}),
+	)
+
+	if aggregateErr != nil {
+		return nil, entity.InternalServerError(aggregateErr.Error())
+	}
+
+	// return the first aggregation result
+	return &result[0], nil
+}

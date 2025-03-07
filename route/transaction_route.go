@@ -16,5 +16,6 @@ func SetupTransactionController(app *fiber.App) {
 	// Tambahkan route ke dalam group
 	v2.Post("/", c.CreateTransaction)
 	v2.Get("/", c.GetTransactionList)
+	v2.Get("/summary", c.GetTransactionSummary)
 
 }

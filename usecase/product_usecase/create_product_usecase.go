@@ -7,8 +7,8 @@ import (
 	"mime/multipart"
 
 	"github.com/susatyo441/go-ta-utils/entity"
-	"github.com/susatyo441/go-ta-utils/model"
 	"github.com/susatyo441/go-ta-utils/functions"
+	"github.com/susatyo441/go-ta-utils/model"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -50,7 +50,15 @@ func (uc *ProductUseCase) CreateProduct(ctx context.Context, body dto.CreateProd
 	}
 
 	coverPhoto := photos[body.CoverPhoto-1]
-
+	variants := make([]model.ProductVariantsAttr, len(body.Variants))
+	for i, variantDTO := range body.Variants {
+		variants[i] = model.ProductVariantsAttr{
+			Name:         variantDTO.Name,
+			Price:        variantDTO.Price,
+			CapitalPrice: nil,
+			Stock:        variantDTO.Stock,
+		}
+	}
 	product := model.Product{
 		ID:         primitive.NewObjectID(),
 		Name:       body.Name,
@@ -59,6 +67,7 @@ func (uc *ProductUseCase) CreateProduct(ctx context.Context, body dto.CreateProd
 		Stock:      body.Stock,
 		CoverPhoto: coverPhoto,
 		Price:      body.Price,
+		Variants:   variants,
 	}
 
 	_, err = uc.ProductService.Create(ctx, product)

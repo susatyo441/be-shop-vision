@@ -5,6 +5,7 @@ type CreateTransactionDTO struct {
 }
 
 type CreateTransactionAttrDTO struct {
-	ProductID string `json:"productID" bson:"productID" validate:"required"`
-	Quantity  int    `json:"quantity" bson:"quantity" validate:"required,gte=1"`
+	ProductID   string `json:"productID" bson:"productID" validate:"required"`
+	Quantity    int    `json:"quantity" bson:"quantity" validate:"required,gte=1"`
+	VariantName string `json:"variantName" bson:"variantName"`
 }

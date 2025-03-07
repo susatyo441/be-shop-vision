@@ -1,4 +1,4 @@
-package productpipeline
+package transactionpipeline
 
 import (
 	"be-shop-vision/dto"
@@ -19,6 +19,18 @@ func GetTransactionPipeline(query dto.PaginationQuery, storeID primitive.ObjectI
 
 	return pipeline.NewPipelineBuilder().
 		Unwind(bson.M{"path": "$products", "preserveNullAndEmptyArrays": true}).
+
+		// Lookup ke products collection untuk ambil coverPhoto
+		Lookup(bson.M{
+			"from":         "products",
+			"localField":   "products._id",
+			"foreignField": "_id",
+			"as":           "productInfo",
+		}).
+		// Unwind karena hasil lookup array
+		Unwind(bson.M{"path": "$productInfo", "preserveNullAndEmptyArrays": true}).
+
+		// Project semua field yang dibutuhkan
 		Project(bson.M{
 			"_id":        1,
 			"totalPrice": 1,
@@ -35,14 +47,19 @@ func GetTransactionPipeline(query dto.PaginationQuery, storeID primitive.ObjectI
 				},
 				"totalPrice": "$products.totalPrice",
 				"quantity":   "$products.quantity",
+				"coverPhoto": "$productInfo.coverPhoto", // Ambil coverPhoto hasil lookup
 			},
 		}).
+
+		// Filter berdasarkan nama product atau nama category
 		Match(bson.M{
 			"$or": bson.A{
 				bson.M{"product.name": pipeline.GenerateSearchCondition(query.Search)},
 				bson.M{"product.category.name": pipeline.GenerateSearchCondition(query.Search)},
 			},
 		}).
+
+		// Pagination & Sort
 		Pagination(paginationQuery).
 		Build()
 }

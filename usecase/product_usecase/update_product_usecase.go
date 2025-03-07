@@ -101,7 +101,15 @@ func (uc *ProductUseCase) UpdateProduct(ctx context.Context, productID primitive
 		return entity.InternalServerError("Gagal mendapatkan cover photo: " + err.Error())
 	}
 	coverPhoto := productPhoto.Photo
-
+	variants := make([]model.ProductVariantsAttr, len(body.Variants))
+	for i, variantDTO := range body.Variants {
+		variants[i] = model.ProductVariantsAttr{
+			Name:         variantDTO.Name,
+			Price:        variantDTO.Price,
+			CapitalPrice: nil,
+			Stock:        variantDTO.Stock,
+		}
+	}
 	// 7️⃣ Update produk ke database
 	updateData := bson.M{
 		"name":       body.Name,
@@ -109,6 +117,7 @@ func (uc *ProductUseCase) UpdateProduct(ctx context.Context, productID primitive
 		"coverPhoto": coverPhoto,
 		"price":      body.Price,
 		"stock":      body.Stock,
+		"variants":   variants,
 	}
 
 	if _, err := uc.ProductService.UpdateOne(ctx, bson.M{"_id": productID, "storeId": storeID}, bson.M{"$set": updateData}); err != nil {

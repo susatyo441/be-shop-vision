@@ -83,3 +83,27 @@ func (c *TransactionController) GetTransactionList(ctx *fiber.Ctx) error {
 	// return a success response with the fetched device names and a 200 status
 	return response.Success(ctx, "successfully get transaction list", result)
 }
+
+// GetTransactionSummary godoc
+// @Summary Get Summary list
+// @Description Get Summary list
+// @Tags Transaction
+// @Produce  json
+// @Router /transaction/summary [get]
+// @Security BearerAuth
+func (c *TransactionController) GetTransactionSummary(ctx *fiber.Ctx) error {
+
+	storeID := ctx.Locals(middleware.StoreKey).(primitive.ObjectID)
+
+	// initialize the use case with logic specific to the company
+	c.UseCase = c.MakeUseCaseFunction()
+
+	// get device names using the validated query
+	result, err := c.UseCase.GetTransactionSummary(ctx.UserContext(), storeID)
+	if err != nil {
+		return response.SendResponse(ctx, err.Code, nil, err.Message)
+	}
+
+	// return a success response with the fetched device names and a 200 status
+	return response.Success(ctx, "successfully get transaction summary", result)
+}

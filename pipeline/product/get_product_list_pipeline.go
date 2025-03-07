@@ -10,11 +10,21 @@ import (
 )
 
 func GetProductsPipeline(query dto.PaginationQuery, storeID primitive.ObjectID) mongo.Pipeline {
+	// Tentukan sort default (createdAt DESC)
+	sortBy := "createdAt"
+	sortOrder := -1
+
+	// Kalau ada query.SortBy, gunakan itu
+	if query.SortBy != "" {
+		sortBy = query.SortBy
+		sortOrder = query.SortOrder
+	}
+
 	paginationQuery := pipeline.PaginationQuery{
 		Page:      query.Page,
 		Limit:     query.Limit,
-		SortBy:    query.SortBy,
-		SortOrder: query.SortOrder,
+		SortBy:    sortBy,
+		SortOrder: sortOrder,
 	}
 
 	// Awal pipeline
@@ -33,8 +43,22 @@ func GetProductsPipeline(query dto.PaginationQuery, storeID primitive.ObjectID) 
 	// Tambahkan filter jika isAvailable = true
 	if query.IsAvailable {
 		builder = builder.Match(bson.M{
-			"stock": bson.M{"$gt": 0},
+			"$or": bson.A{
+				bson.M{"stock": bson.M{"$gt": 0}},
+				bson.M{"variants": bson.M{"$elemMatch": bson.M{"stock": bson.M{"$gt": 0}}}},
+			},
 		})
+
+		builder = builder.Addfields(bson.M{
+			"variants": bson.M{
+				"$filter": bson.M{
+					"input": "$variants",
+					"as":    "variant",
+					"cond":  bson.M{"$gt": bson.A{"$$variant.stock", 0}},
+				},
+			},
+		})
+
 	}
 
 	// Tambahkan pagination
