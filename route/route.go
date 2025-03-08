@@ -6,6 +6,7 @@ import (
 )
 
 func SetupRoute(app *fiber.App) {
+	SetupUserController(app)
 	app.Use(middleware.ValidateJWT())
 
 	SetupCategoryController(app)
