@@ -1,13 +1,12 @@
 package util
 
 import (
+	"fmt"
 	"os"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
 )
-
-var jwtSecret = []byte(os.Getenv("JWT_KEY"))
 
 // JWTClaims adalah struktur payload dalam token JWT
 type JWTClaims struct {
@@ -19,6 +18,8 @@ type JWTClaims struct {
 
 // GenerateJWT membuat token JWT dengan `storeId`, `userId`, dan `session`
 func GenerateJWT(userID string, storeID string, withExp bool) (string, error) {
+	var jwtKey = []byte(os.Getenv("JWT_KEY"))
+	fmt.Println(jwtKey)
 	claims := JWTClaims{
 		Session: userID,
 		ID:      userID,
@@ -33,5 +34,5 @@ func GenerateJWT(userID string, storeID string, withExp bool) (string, error) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-	return token.SignedString(jwtSecret)
+	return token.SignedString(jwtKey)
 }
