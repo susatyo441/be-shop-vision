@@ -30,6 +30,16 @@ func (uc *ProductUseCase) CreateProduct(ctx context.Context, body dto.CreateProd
 		return entity.InternalServerError(err.Error())
 	}
 
+	_, err = uc.ProductService.FindOne(ctx, bson.M{
+		"name": body.Name, "storeId": storeID,
+	})
+
+	if err == nil {
+		return entity.BadRequest("Nama produk duplikat")
+	} else if err != mongo.ErrNoDocuments {
+		return entity.InternalServerError(err.Error())
+	}
+
 	attributes := []string{"image1", "image2", "image3", "image4", "image5"}
 
 	// Simpan semua image ke filesystem (ini di usecase)

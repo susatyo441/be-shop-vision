@@ -27,6 +27,20 @@ func (uc *ProductUseCase) UpdateProduct(ctx context.Context, productID primitive
 		return entity.InternalServerError(err.Error())
 	}
 
+	_, err = uc.ProductService.FindOne(ctx, bson.M{
+		"name":    body.Name,
+		"storeId": storeID,
+		"_id":     bson.M{"$ne": productID},
+	})
+
+	if err == nil {
+		// Jika ditemukan produk dengan nama & store yang sama, kembalikan error
+		return entity.BadRequest("Produk dengan nama ini sudah ada di toko")
+	} else if err != mongo.ErrNoDocuments {
+		// Jika terjadi error lain (bukan karena data tidak ditemukan), return error internal
+		return entity.InternalServerError(err.Error())
+	}
+
 	// 2️⃣ Validasi kategori
 	categoryObjectID, _ := primitive.ObjectIDFromHex(body.CategoryID)
 	category, err := uc.CategoryService.FindOne(ctx, bson.M{"_id": categoryObjectID, "storeId": storeID})
