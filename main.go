@@ -22,7 +22,9 @@ func InitializeApp(isTest bool) (*fiber.App, string) {
 		log.Fatal("Error loading .env file:", err)
 	}
 
-	app := fiber.New()
+	app := fiber.New(fiber.Config{
+		BodyLimit: 100 * 1024 * 1024, // 100MB
+	})
 
 	// BasicAuth middleware configuration
 	authConfig := basicauth.Config{
