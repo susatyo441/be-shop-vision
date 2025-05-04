@@ -32,6 +32,11 @@
                 "summary": "Get Category Option",
                 "parameters": [
                     {
+                        "type": "boolean",
+                        "name": "isAvailable",
+                        "in": "query"
+                    },
+                    {
                         "minimum": 0,
                         "type": "integer",
                         "name": "limit",
@@ -151,6 +156,346 @@
                 ],
                 "responses": {}
             }
+        },
+        "/export-all": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Export All Data",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Export"
+                ],
+                "summary": "Export Data",
+                "responses": {}
+            }
+        },
+        "/product": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get Products list",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Get Products list",
+                "parameters": [
+                    {
+                        "type": "boolean",
+                        "name": "isAvailable",
+                        "in": "query"
+                    },
+                    {
+                        "minimum": 0,
+                        "type": "integer",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "minimum": 0,
+                        "type": "integer",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "sortBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "sortOrder",
+                        "in": "query"
+                    }
+                ],
+                "responses": {}
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Create Product",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Create Product",
+                "parameters": [
+                    {
+                        "description": "Payload to create",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/productdto.CreateProductDTO"
+                        }
+                    }
+                ],
+                "responses": {}
+            },
+            "delete": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Bulk Delete Products",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Bulk Delete Products",
+                "parameters": [
+                    {
+                        "description": "Payload to delete",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.ArrayOfIdDTO"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/product/{productId}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get Product Detail",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Get Product Detail",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "product ID",
+                        "name": "productId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            },
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update Products",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Update Products",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "product ID",
+                        "name": "productId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Payload to update",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/productdto.UpdateProductDTO"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/transaction": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get Transaction list",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "Get Transaction list",
+                "parameters": [
+                    {
+                        "type": "boolean",
+                        "name": "isAvailable",
+                        "in": "query"
+                    },
+                    {
+                        "minimum": 0,
+                        "type": "integer",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "minimum": 0,
+                        "type": "integer",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "sortBy",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "sortOrder",
+                        "in": "query"
+                    }
+                ],
+                "responses": {}
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Create Transaction",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "Create Transaction",
+                "parameters": [
+                    {
+                        "description": "Payload to create",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/transactiondto.CreateTransactionDTO"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/transaction/summary": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get Summary list",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "Get Summary list",
+                "responses": {}
+            }
+        },
+        "/user/login": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Login User",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Login User",
+                "parameters": [
+                    {
+                        "description": "Payload to login",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/userdto.LoginUserDTO"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/user/register": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Register User",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Register User",
+                "parameters": [
+                    {
+                        "description": "Payload to create",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/transactiondto.CreateTransactionDTO"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
         }
     },
     "definitions": {
@@ -174,6 +519,145 @@
                     "items": {
                         "type": "string"
                     }
+                }
+            }
+        },
+        "productdto.CreateProductDTO": {
+            "type": "object",
+            "required": [
+                "categoryID",
+                "coverPhoto",
+                "name"
+            ],
+            "properties": {
+                "categoryID": {
+                    "type": "string"
+                },
+                "coverPhoto": {
+                    "type": "integer",
+                    "maximum": 5,
+                    "minimum": 1
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "stock": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "variants": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/productdto.ProductVariantDTO"
+                    }
+                }
+            }
+        },
+        "productdto.ProductVariantDTO": {
+            "type": "object",
+            "required": [
+                "name",
+                "price",
+                "stock"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "stock": {
+                    "type": "integer",
+                    "minimum": 0
+                }
+            }
+        },
+        "productdto.UpdateProductDTO": {
+            "type": "object",
+            "required": [
+                "categoryID",
+                "coverPhoto",
+                "name"
+            ],
+            "properties": {
+                "categoryID": {
+                    "type": "string"
+                },
+                "coverPhoto": {
+                    "type": "integer",
+                    "maximum": 5,
+                    "minimum": 1
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "stock": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "variants": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/productdto.ProductVariantDTO"
+                    }
+                }
+            }
+        },
+        "transactiondto.CreateTransactionAttrDTO": {
+            "type": "object",
+            "required": [
+                "productID",
+                "quantity"
+            ],
+            "properties": {
+                "productID": {
+                    "type": "string"
+                },
+                "quantity": {
+                    "type": "integer",
+                    "minimum": 1
+                },
+                "variantName": {
+                    "type": "string"
+                }
+            }
+        },
+        "transactiondto.CreateTransactionDTO": {
+            "type": "object",
+            "required": [
+                "data"
+            ],
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/transactiondto.CreateTransactionAttrDTO"
+                    }
+                }
+            }
+        },
+        "userdto.LoginUserDTO": {
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
                 }
             }
         }

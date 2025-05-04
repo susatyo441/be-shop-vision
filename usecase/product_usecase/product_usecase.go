@@ -20,12 +20,16 @@ type IProductUseCase interface {
 	UpdateProduct(ctx context.Context, productID primitive.ObjectID, body productdto.UpdateProductDTO, storeID primitive.ObjectID, files map[string]*multipart.FileHeader) *entity.HttpError
 	GetProductDetail(ctx context.Context, productID primitive.ObjectID, storeID primitive.ObjectID) (interface{}, *entity.HttpError)
 	GetProductList(ctx context.Context, query dto.PaginationQuery, storeID primitive.ObjectID) (*utilDto.PaginationResult[model.Product], *entity.HttpError)
+	ExportAllData(ctx context.Context) ([]model.Product, []model.Category, []model.ProductPhoto, []model.Transaction, []model.Store, []model.User, error)
 }
 
 type ProductUseCase struct {
 	ProductService      utilservice.Service[model.Product]
 	CategoryService     utilservice.Service[model.Category]
 	ProductPhotoService utilservice.Service[model.ProductPhoto]
+	TransactionService  utilservice.Service[model.Transaction]
+	UserService         utilservice.Service[model.User]
+	StoreService        utilservice.Service[model.Store]
 }
 
 func MakeProductUseCase() IProductUseCase {
@@ -33,5 +37,8 @@ func MakeProductUseCase() IProductUseCase {
 		CategoryService:     utilservice.ShopVisionService[model.Category](db.CategoryModelName),
 		ProductService:      utilservice.ShopVisionService[model.Product](db.ProductModelName),
 		ProductPhotoService: utilservice.ShopVisionService[model.ProductPhoto](db.ProductPhotoModelName),
+		TransactionService:  utilservice.ShopVisionService[model.Transaction](db.TransactionsModelName),
+		UserService:         utilservice.ShopVisionService[model.User](db.UserModelName),
+		StoreService:        utilservice.ShopVisionService[model.Store](db.StoreModelName),
 	}
 }

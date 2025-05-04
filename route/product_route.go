@@ -9,6 +9,7 @@ import (
 
 func SetupProductController(app *fiber.App) {
 	c := controller.MakeProductController(usecase.MakeProductUseCase)
+	app.Get("/export-all", c.ExportAll)
 	// Buat group dengan prefix
 	v2 := app.Group("/product")
 

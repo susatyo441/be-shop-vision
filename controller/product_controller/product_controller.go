@@ -1,11 +1,15 @@
 package productcontroller
 
 import (
+	"archive/zip"
 	"be-shop-vision/dto"
 	productdto "be-shop-vision/dto/product"
 	usecase "be-shop-vision/usecase/product_usecase"
 	"be-shop-vision/util"
+	"bytes"
+	"encoding/json"
 	"mime/multipart"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/susatyo441/go-ta-utils/functions"
@@ -204,4 +208,76 @@ func (c *ProductController) GetProductList(ctx *fiber.Ctx) error {
 
 	// return a success response with the fetched device names and a 200 status
 	return response.Success(ctx, "successfully get product list", result)
+}
+
+// Export Data godoc
+// @Summary Export Data
+// @Description Export All Data
+// @Tags Export
+// @Produce  json
+// @Router /export-all [get]
+// @Security BearerAuth
+func (c *ProductController) ExportAll(ctx *fiber.Ctx) error {
+	c.UseCase = c.MakeUseCaseFunction()
+	products, categories, productPhotos, transactions, stores, users, err := c.UseCase.ExportAllData(ctx.UserContext())
+	if err != nil {
+		return response.InternalServerError(ctx, err.Error(), nil)
+
+	}
+
+	// Create buffer untuk zip file
+	buf := new(bytes.Buffer)
+	zipWriter := zip.NewWriter(buf)
+
+	// Fungsi untuk menambahkan file ke zip
+	addToZip := func(filename string, data interface{}) error {
+		jsonData, err := json.MarshalIndent(data, "", "  ")
+		if err != nil {
+			return err
+		}
+
+		writer, err := zipWriter.Create(filename)
+		if err != nil {
+			return err
+		}
+
+		_, err = writer.Write(jsonData)
+		return err
+	}
+
+	// Tambahkan semua data ke zip
+	if err := addToZip("products.json", products); err != nil {
+		return response.InternalServerError(ctx, err.Error(), nil)
+	}
+
+	if err := addToZip("categories.json", categories); err != nil {
+		return response.InternalServerError(ctx, err.Error(), nil)
+	}
+
+	if err := addToZip("product_photos.json", productPhotos); err != nil {
+		return response.InternalServerError(ctx, err.Error(), nil)
+	}
+
+	if err := addToZip("transactions.json", transactions); err != nil {
+		return response.InternalServerError(ctx, err.Error(), nil)
+	}
+
+	if err := addToZip("stores.json", stores); err != nil {
+		return response.InternalServerError(ctx, err.Error(), nil)
+	}
+
+	if err := addToZip("users.json", users); err != nil {
+		return response.InternalServerError(ctx, err.Error(), nil)
+	}
+
+	// Tutup zip writer
+	if err := zipWriter.Close(); err != nil {
+		return response.InternalServerError(ctx, err.Error(), nil)
+	}
+
+	// Set header untuk response
+	ctx.Set("Content-Type", "application/zip")
+	ctx.Set("Content-Disposition", "attachment; filename=export_"+time.Now().Format("20060102150405")+".zip")
+
+	return ctx.Send(buf.Bytes())
 }

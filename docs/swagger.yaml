@@ -14,6 +14,103 @@ definitions:
           type: string
         type: array
     type: object
+  productdto.CreateProductDTO:
+    properties:
+      categoryID:
+        type: string
+      coverPhoto:
+        maximum: 5
+        minimum: 1
+        type: integer
+      name:
+        type: string
+      price:
+        minimum: 1
+        type: integer
+      stock:
+        minimum: 0
+        type: integer
+      variants:
+        items:
+          $ref: '#/definitions/productdto.ProductVariantDTO'
+        type: array
+    required:
+    - categoryID
+    - coverPhoto
+    - name
+    type: object
+  productdto.ProductVariantDTO:
+    properties:
+      name:
+        type: string
+      price:
+        minimum: 1
+        type: integer
+      stock:
+        minimum: 0
+        type: integer
+    required:
+    - name
+    - price
+    - stock
+    type: object
+  productdto.UpdateProductDTO:
+    properties:
+      categoryID:
+        type: string
+      coverPhoto:
+        maximum: 5
+        minimum: 1
+        type: integer
+      name:
+        type: string
+      price:
+        minimum: 1
+        type: integer
+      stock:
+        minimum: 0
+        type: integer
+      variants:
+        items:
+          $ref: '#/definitions/productdto.ProductVariantDTO'
+        type: array
+    required:
+    - categoryID
+    - coverPhoto
+    - name
+    type: object
+  transactiondto.CreateTransactionAttrDTO:
+    properties:
+      productID:
+        type: string
+      quantity:
+        minimum: 1
+        type: integer
+      variantName:
+        type: string
+    required:
+    - productID
+    - quantity
+    type: object
+  transactiondto.CreateTransactionDTO:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/transactiondto.CreateTransactionAttrDTO'
+        type: array
+    required:
+    - data
+    type: object
+  userdto.LoginUserDTO:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
 info:
   contact:
     email: fiber@swagger.io
@@ -47,6 +144,9 @@ paths:
     get:
       description: Get Category Option
       parameters:
+      - in: query
+        name: isAvailable
+        type: boolean
       - in: query
         minimum: 0
         name: limit
@@ -112,6 +212,218 @@ paths:
       summary: Update Category
       tags:
       - Category
+  /export-all:
+    get:
+      description: Export All Data
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Export Data
+      tags:
+      - Export
+  /product:
+    delete:
+      description: Bulk Delete Products
+      parameters:
+      - description: Payload to delete
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/dto.ArrayOfIdDTO'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Bulk Delete Products
+      tags:
+      - Product
+    get:
+      description: Get Products list
+      parameters:
+      - in: query
+        name: isAvailable
+        type: boolean
+      - in: query
+        minimum: 0
+        name: limit
+        type: integer
+      - in: query
+        minimum: 0
+        name: page
+        type: integer
+      - in: query
+        name: search
+        type: string
+      - in: query
+        name: sortBy
+        type: string
+      - in: query
+        name: sortOrder
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get Products list
+      tags:
+      - Product
+    post:
+      description: Create Product
+      parameters:
+      - description: Payload to create
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/productdto.CreateProductDTO'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Create Product
+      tags:
+      - Product
+  /product/{productId}:
+    get:
+      description: Get Product Detail
+      parameters:
+      - description: product ID
+        in: path
+        name: productId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get Product Detail
+      tags:
+      - Product
+    put:
+      description: Update Products
+      parameters:
+      - description: product ID
+        in: path
+        name: productId
+        required: true
+        type: string
+      - description: Payload to update
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/productdto.UpdateProductDTO'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Update Products
+      tags:
+      - Product
+  /transaction:
+    get:
+      description: Get Transaction list
+      parameters:
+      - in: query
+        name: isAvailable
+        type: boolean
+      - in: query
+        minimum: 0
+        name: limit
+        type: integer
+      - in: query
+        minimum: 0
+        name: page
+        type: integer
+      - in: query
+        name: search
+        type: string
+      - in: query
+        name: sortBy
+        type: string
+      - in: query
+        name: sortOrder
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get Transaction list
+      tags:
+      - Transaction
+    post:
+      description: Create Transaction
+      parameters:
+      - description: Payload to create
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/transactiondto.CreateTransactionDTO'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Create Transaction
+      tags:
+      - Transaction
+  /transaction/summary:
+    get:
+      description: Get Summary list
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get Summary list
+      tags:
+      - Transaction
+  /user/login:
+    post:
+      description: Login User
+      parameters:
+      - description: Payload to login
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/userdto.LoginUserDTO'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Login User
+      tags:
+      - User
+  /user/register:
+    post:
+      description: Register User
+      parameters:
+      - description: Payload to create
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/transactiondto.CreateTransactionDTO'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Register User
+      tags:
+      - User
 securityDefinitions:
   BearerAuth:
     description: Type "Bearer" followed by a space and JWT token.
