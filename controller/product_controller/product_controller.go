@@ -7,8 +7,9 @@ import (
 	usecase "be-shop-vision/usecase/product_usecase"
 	"be-shop-vision/util"
 	"bytes"
-	"encoding/json"
+	"errors"
 	"mime/multipart"
+	"reflect"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -16,6 +17,8 @@ import (
 	"github.com/susatyo441/go-ta-utils/middleware"
 	"github.com/susatyo441/go-ta-utils/parser"
 	"github.com/susatyo441/go-ta-utils/response"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/bsonrw"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -231,17 +234,51 @@ func (c *ProductController) ExportAll(ctx *fiber.Ctx) error {
 
 	// Fungsi untuk menambahkan file ke zip
 	addToZip := func(filename string, data interface{}) error {
-		jsonData, err := json.MarshalIndent(data, "", "  ")
-		if err != nil {
-			return err
+		// Data harus berupa slice
+		slice, ok := data.([]interface{})
+		if !ok {
+			// Coba pakai refleksi sebagai alternatif umum untuk semua slice
+			val := reflect.ValueOf(data)
+			if val.Kind() != reflect.Slice {
+				return errors.New("data must be a slice")
+			}
+			// Konversi slice ke []interface{}
+			slice = make([]interface{}, val.Len())
+			for i := 0; i < val.Len(); i++ {
+				slice[i] = val.Index(i).Interface()
+			}
 		}
+
+		var buf bytes.Buffer
+		buf.WriteString("[\n")
+
+		for i, item := range slice {
+			var jsonBuf bytes.Buffer
+			writer, err := bsonrw.NewExtJSONValueWriter(&jsonBuf, true, false)
+			if err != nil {
+				return err
+			}
+			enc, err := bson.NewEncoder(writer)
+			if err != nil {
+				return err
+			}
+			if err := enc.Encode(item); err != nil {
+				return err
+			}
+			buf.Write(jsonBuf.Bytes())
+			if i < len(slice)-1 {
+				buf.WriteString(",\n")
+			}
+		}
+
+		buf.WriteString("\n]")
 
 		writer, err := zipWriter.Create(filename)
 		if err != nil {
 			return err
 		}
 
-		_, err = writer.Write(jsonData)
+		_, err = writer.Write(buf.Bytes())
 		return err
 	}
 
