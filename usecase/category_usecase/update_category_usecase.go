@@ -21,7 +21,7 @@ func (uc *CategoryUseCase) UpdateCategory(ctx context.Context, body dto.CreateCa
 		return entity.BadRequest("Nama kategori duplikat")
 	}
 
-	_, err = uc.CategoryService.FindOneAndUpdate(ctx, bson.M{"_id": categoryId}, bson.M{"$set": bson.M{
+	_, err = uc.CategoryService.FindOneAndUpdate(ctx, bson.M{"_id": categoryId, "storeId": storeID}, bson.M{"$set": bson.M{
 		"name": body.Name,
 	}})
 

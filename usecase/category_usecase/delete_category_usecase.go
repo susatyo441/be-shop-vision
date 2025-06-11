@@ -19,9 +19,13 @@ func (uc *CategoryUseCase) BulkDeleteCategories(ctx context.Context, body dto.Ar
 	}
 
 	// Lakukan penghapusan berdasarkan ObjectID
-	_, err := uc.CategoryService.DeleteMany(ctx, bson.M{"_id": bson.M{"$in": objectIDs}, "storeId": storeID})
+	deletedCounts, err := uc.CategoryService.DeleteMany(ctx, bson.M{"_id": bson.M{"$in": objectIDs}, "storeId": storeID})
 	if err != nil {
 		return entity.InternalServerError(err.Error())
+	}
+
+	if deletedCounts == 0 {
+		return entity.BadRequest("Tidak ada kategori yang dihapus, pastikan ID yang diberikan benar")
 	}
 
 	return nil
