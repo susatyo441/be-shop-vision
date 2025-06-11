@@ -26,7 +26,7 @@ func (uc *CategoryUseCase) UpdateCategory(ctx context.Context, body dto.CreateCa
 	}})
 
 	if err != nil {
-		if err != mongo.ErrNoDocuments {
+		if err == mongo.ErrNoDocuments {
 			return entity.BadRequest("tidak ditemukan category")
 		}
 		return entity.InternalServerError(err.Error())
