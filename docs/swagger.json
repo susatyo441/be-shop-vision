@@ -15,7 +15,7 @@
         "version": "1.0"
     },
     "paths": {
-        "/category": {
+        "/api/category": {
             "get": {
                 "security": [
                     {
@@ -121,7 +121,7 @@
                 "responses": {}
             }
         },
-        "/category/{categoryId}": {
+        "/api/category/{categoryId}": {
             "put": {
                 "security": [
                     {
@@ -157,7 +157,7 @@
                 "responses": {}
             }
         },
-        "/export-all": {
+        "/api/export-all": {
             "get": {
                 "security": [
                     {
@@ -175,7 +175,7 @@
                 "responses": {}
             }
         },
-        "/product": {
+        "/api/product": {
             "get": {
                 "security": [
                     {
@@ -281,7 +281,7 @@
                 "responses": {}
             }
         },
-        "/product/{productId}": {
+        "/api/product/{productId}": {
             "get": {
                 "security": [
                     {
@@ -342,7 +342,7 @@
                 "responses": {}
             }
         },
-        "/transaction": {
+        "/api/transaction": {
             "get": {
                 "security": [
                     {
@@ -421,7 +421,7 @@
                 "responses": {}
             }
         },
-        "/transaction/summary": {
+        "/api/transaction/summary": {
             "get": {
                 "security": [
                     {
@@ -439,7 +439,7 @@
                 "responses": {}
             }
         },
-        "/user/login": {
+        "/api/user/login": {
             "post": {
                 "security": [
                     {
@@ -468,7 +468,7 @@
                 "responses": {}
             }
         },
-        "/user/register": {
+        "/api/user/register": {
             "post": {
                 "security": [
                     {

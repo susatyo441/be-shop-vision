@@ -23,7 +23,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/category": {
+        "/api/category": {
             "get": {
                 "security": [
                     {
@@ -129,7 +129,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/category/{categoryId}": {
+        "/api/category/{categoryId}": {
             "put": {
                 "security": [
                     {
@@ -165,7 +165,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/export-all": {
+        "/api/export-all": {
             "get": {
                 "security": [
                     {
@@ -183,7 +183,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/product": {
+        "/api/product": {
             "get": {
                 "security": [
                     {
@@ -289,7 +289,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/product/{productId}": {
+        "/api/product/{productId}": {
             "get": {
                 "security": [
                     {
@@ -350,7 +350,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/transaction": {
+        "/api/transaction": {
             "get": {
                 "security": [
                     {
@@ -429,7 +429,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/transaction/summary": {
+        "/api/transaction/summary": {
             "get": {
                 "security": [
                     {
@@ -447,7 +447,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/user/login": {
+        "/api/user/login": {
             "post": {
                 "security": [
                     {
@@ -476,7 +476,7 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/user/register": {
+        "/api/user/register": {
             "post": {
                 "security": [
                     {

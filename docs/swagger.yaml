@@ -123,7 +123,7 @@ info:
   title: Fiber Example API
   version: "1.0"
 paths:
-  /category:
+  /api/category:
     delete:
       description: Bulk Delete Categories
       parameters:
@@ -189,7 +189,7 @@ paths:
       summary: Create Category
       tags:
       - Category
-  /category/{categoryId}:
+  /api/category/{categoryId}:
     put:
       description: Update Category
       parameters:
@@ -212,7 +212,7 @@ paths:
       summary: Update Category
       tags:
       - Category
-  /export-all:
+  /api/export-all:
     get:
       description: Export All Data
       produces:
@@ -223,7 +223,7 @@ paths:
       summary: Export Data
       tags:
       - Export
-  /product:
+  /api/product:
     delete:
       description: Bulk Delete Products
       parameters:
@@ -289,7 +289,7 @@ paths:
       summary: Create Product
       tags:
       - Product
-  /product/{productId}:
+  /api/product/{productId}:
     get:
       description: Get Product Detail
       parameters:
@@ -328,7 +328,7 @@ paths:
       summary: Update Products
       tags:
       - Product
-  /transaction:
+  /api/transaction:
     get:
       description: Get Transaction list
       parameters:
@@ -377,7 +377,7 @@ paths:
       summary: Create Transaction
       tags:
       - Transaction
-  /transaction/summary:
+  /api/transaction/summary:
     get:
       description: Get Summary list
       produces:
@@ -388,7 +388,7 @@ paths:
       summary: Get Summary list
       tags:
       - Transaction
-  /user/login:
+  /api/user/login:
     post:
       description: Login User
       parameters:
@@ -406,7 +406,7 @@ paths:
       summary: Login User
       tags:
       - User
-  /user/register:
+  /api/user/register:
     post:
       description: Register User
       parameters:

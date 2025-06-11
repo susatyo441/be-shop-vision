@@ -29,7 +29,7 @@ func MakeTransactionController(makeUseCaseFunc makeTransactionUseCaseFunc) *Tran
 // @Description Create Transaction
 // @Tags Transaction
 // @Produce  json
-// @Router /transaction [post]
+// @Router /api/transaction [post]
 // @Param payload body transactiondto.CreateTransactionDTO true "Payload to create"
 // @Security BearerAuth
 func (ctrl *TransactionController) CreateTransaction(ctx *fiber.Ctx) error {
@@ -56,7 +56,7 @@ func (ctrl *TransactionController) CreateTransaction(ctx *fiber.Ctx) error {
 // @Description Get Transaction list
 // @Tags Transaction
 // @Produce  json
-// @Router /transaction [get]
+// @Router /api/transaction [get]
 // @Param q query dto.PaginationQuery false "Query"
 // @Security BearerAuth
 func (c *TransactionController) GetTransactionList(ctx *fiber.Ctx) error {
@@ -89,7 +89,7 @@ func (c *TransactionController) GetTransactionList(ctx *fiber.Ctx) error {
 // @Description Get Summary list
 // @Tags Transaction
 // @Produce  json
-// @Router /transaction/summary [get]
+// @Router /api/transaction/summary [get]
 // @Security BearerAuth
 func (c *TransactionController) GetTransactionSummary(ctx *fiber.Ctx) error {
 

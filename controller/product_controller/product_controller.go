@@ -38,7 +38,7 @@ func MakeProductController(makeUseCaseFunc makeProductUseCaseFunc) *ProductContr
 // @Description Create Product
 // @Tags Product
 // @Produce  json
-// @Router /product [post]
+// @Router /api/product [post]
 // @Param payload body productdto.CreateProductDTO true "Payload to create"
 // @Security BearerAuth
 func (ctrl *ProductController) CreateProduct(ctx *fiber.Ctx) error {
@@ -80,7 +80,7 @@ func (ctrl *ProductController) CreateProduct(ctx *fiber.Ctx) error {
 // @Description Bulk Delete Products
 // @Tags Product
 // @Produce  json
-// @Router /product [delete]
+// @Router /api/product [delete]
 // @Param payload body dto.ArrayOfIdDTO true "Payload to delete"
 // @Security BearerAuth
 func (ctrl *ProductController) BulkDeleteProducts(ctx *fiber.Ctx) error {
@@ -107,7 +107,7 @@ func (ctrl *ProductController) BulkDeleteProducts(ctx *fiber.Ctx) error {
 // @Description Update Products
 // @Tags Product
 // @Produce  json
-// @Router /product/{productId} [put]
+// @Router /api/product/{productId} [put]
 // @Param productId path string true "product ID"
 // @Param payload body productdto.UpdateProductDTO true "Payload to update"
 // @Security BearerAuth
@@ -158,7 +158,7 @@ func (ctrl *ProductController) UpdateProduct(ctx *fiber.Ctx) error {
 // @Description Get Product Detail
 // @Tags Product
 // @Produce  json
-// @Router /product/{productId} [get]
+// @Router /api/product/{productId} [get]
 // @Param productId path string true "product ID"
 // @Security BearerAuth
 func (ctrl *ProductController) GetProductDetail(ctx *fiber.Ctx) error {
@@ -184,7 +184,7 @@ func (ctrl *ProductController) GetProductDetail(ctx *fiber.Ctx) error {
 // @Description Get Products list
 // @Tags Product
 // @Produce  json
-// @Router /product [get]
+// @Router /api/product [get]
 // @Param q query dto.PaginationQuery false "Query"
 // @Security BearerAuth
 func (c *ProductController) GetProductList(ctx *fiber.Ctx) error {
@@ -218,7 +218,7 @@ func (c *ProductController) GetProductList(ctx *fiber.Ctx) error {
 // @Description Export All Data
 // @Tags Export
 // @Produce  json
-// @Router /export-all [get]
+// @Router /api/export-all [get]
 // @Security BearerAuth
 func (c *ProductController) ExportAll(ctx *fiber.Ctx) error {
 	c.UseCase = c.MakeUseCaseFunction()

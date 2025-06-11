@@ -30,7 +30,7 @@ func MakeCategoryController(makeUseCaseFunc makeCategoryUseCaseFunc) *CategoryCo
 // @Description Create Category
 // @Tags Category
 // @Produce  json
-// @Router /category [post]
+// @Router /api/category [post]
 // @Param payload body categorydto.CreateCategoryDTO true "Payload to create"
 // @Security BearerAuth
 func (ctrl *CategoryController) CreateCategory(ctx *fiber.Ctx) error {
@@ -56,7 +56,7 @@ func (ctrl *CategoryController) CreateCategory(ctx *fiber.Ctx) error {
 // @Description Update Category
 // @Tags Category
 // @Produce  json
-// @Router /category/{categoryId} [put]
+// @Router /api/category/{categoryId} [put]
 // @Param categoryId path string true "Category ID"
 // @Param payload body categorydto.CreateCategoryDTO true "Payload to update"
 // @Security BearerAuth
@@ -87,7 +87,7 @@ func (ctrl *CategoryController) UpdateCategory(ctx *fiber.Ctx) error {
 // @Description Get Category Option
 // @Tags Category
 // @Produce  json
-// @Router /category [get]
+// @Router /api/category [get]
 // @Param q query dto.PaginationQuery false "Query"
 // @Security BearerAuth
 func (ctrl *CategoryController) GetCategoryOptions(ctx *fiber.Ctx) error {
@@ -117,7 +117,7 @@ func (ctrl *CategoryController) GetCategoryOptions(ctx *fiber.Ctx) error {
 // @Description Bulk Delete Categories
 // @Tags Category
 // @Produce  json
-// @Router /category [delete]
+// @Router /api/category [delete]
 // @Param payload body dto.ArrayOfIdDTO true "Payload to delete"
 // @Security BearerAuth
 func (ctrl *CategoryController) BulkDeleteCategories(ctx *fiber.Ctx) error {

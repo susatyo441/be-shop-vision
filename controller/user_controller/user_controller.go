@@ -26,7 +26,7 @@ func MakeUserController(makeUseCaseFunc makeUserUseCaseFunc) *UserController {
 // @Description Register User
 // @Tags User
 // @Produce  json
-// @Router /user/register [post]
+// @Router /api/user/register [post]
 // @Param payload body transactiondto.CreateTransactionDTO true "Payload to create"
 // @Security BearerAuth
 func (ctrl *UserController) RegisterUser(ctx *fiber.Ctx) error {
@@ -59,7 +59,7 @@ func (ctrl *UserController) RegisterUser(ctx *fiber.Ctx) error {
 // @Description Login User
 // @Tags User
 // @Produce  json
-// @Router /user/login [post]
+// @Router /api/user/login [post]
 // @Param payload body userdto.LoginUserDTO true "Payload to login"
 // @Security BearerAuth
 func (ctrl *UserController) LoginUser(c *fiber.Ctx) error {
