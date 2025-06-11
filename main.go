@@ -40,7 +40,7 @@ func InitializeApp(isTest bool) (*fiber.App, string) {
 
 	// Set Swagger route to /assets/docs
 	app.Get("/docs/*", swagger.New(swagger.Config{
-		URL: "/docs/doc.json", // Specify the path to your OpenAPI file, delete /asset-control if in local
+		URL: "/api/docs/doc.json", // Specify the path to your OpenAPI file, delete /asset-control if in local
 	}))
 
 	// Setup route config

@@ -111,6 +111,25 @@ definitions:
     - email
     - password
     type: object
+  userdto.RegisterUserDTO:
+    properties:
+      email:
+        type: string
+      name:
+        type: string
+      password:
+        minLength: 6
+        type: string
+      phoneNumber:
+        type: string
+      storeID:
+        type: string
+    required:
+    - email
+    - name
+    - password
+    - storeID
+    type: object
 info:
   contact:
     email: fiber@swagger.io
@@ -415,7 +434,7 @@ paths:
         name: payload
         required: true
         schema:
-          $ref: '#/definitions/transactiondto.CreateTransactionDTO'
+          $ref: '#/definitions/userdto.RegisterUserDTO'
       produces:
       - application/json
       responses: {}

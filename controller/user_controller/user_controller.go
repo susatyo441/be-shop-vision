@@ -27,7 +27,7 @@ func MakeUserController(makeUseCaseFunc makeUserUseCaseFunc) *UserController {
 // @Tags User
 // @Produce  json
 // @Router /api/user/register [post]
-// @Param payload body transactiondto.CreateTransactionDTO true "Payload to create"
+// @Param payload body userdto.RegisterUserDTO true "Payload to create"
 // @Security BearerAuth
 func (ctrl *UserController) RegisterUser(ctx *fiber.Ctx) error {
 

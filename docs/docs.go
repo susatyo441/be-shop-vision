@@ -498,7 +498,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/transactiondto.CreateTransactionDTO"
+                            "$ref": "#/definitions/userdto.RegisterUserDTO"
                         }
                     }
                 ],
@@ -665,6 +665,33 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "userdto.RegisterUserDTO": {
+            "type": "object",
+            "required": [
+                "email",
+                "name",
+                "password",
+                "storeID"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string",
+                    "minLength": 6
+                },
+                "phoneNumber": {
+                    "type": "string"
+                },
+                "storeID": {
                     "type": "string"
                 }
             }
