@@ -146,7 +146,7 @@ paths:
     delete:
       description: Bulk Delete Categories
       parameters:
-      - description: Payload to delete
+      - description: Payload to bulk delete
         in: body
         name: payload
         required: true
@@ -246,7 +246,7 @@ paths:
     delete:
       description: Bulk Delete Products
       parameters:
-      - description: Payload to delete
+      - description: Payload to bulk delete
         in: body
         name: payload
         required: true

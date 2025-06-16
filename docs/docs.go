@@ -117,7 +117,7 @@ const docTemplate = `{
                 "summary": "Bulk Delete Categories",
                 "parameters": [
                     {
-                        "description": "Payload to delete",
+                        "description": "Payload to bulk delete",
                         "name": "payload",
                         "in": "body",
                         "required": true,
@@ -277,7 +277,7 @@ const docTemplate = `{
                 "summary": "Bulk Delete Products",
                 "parameters": [
                     {
-                        "description": "Payload to delete",
+                        "description": "Payload to bulk delete",
                         "name": "payload",
                         "in": "body",
                         "required": true,
