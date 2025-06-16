@@ -25,7 +25,7 @@ jobs:
             sudo git reset --hard HEAD
             sudo git pull
             go install github.com/swaggo/swag/cmd/swag@latest
-            ~/go/bin/swag init --parseDependency
+            ../go/bin/swag init
             go build -o be-shop-vision
             sudo systemctl restart be-shop-vision
           EOF
