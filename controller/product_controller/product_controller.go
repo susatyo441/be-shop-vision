@@ -81,7 +81,7 @@ func (ctrl *ProductController) CreateProduct(ctx *fiber.Ctx) error {
 // @Tags Product
 // @Produce  json
 // @Router /api/product [delete]
-// @Param payload body dto.ArrayOfIdDTO true "Payload to delete"
+// @Param payload body dto.ArrayOfIdDTO true "Payload to bulk delete"
 // @Security BearerAuth
 func (ctrl *ProductController) BulkDeleteProducts(ctx *fiber.Ctx) error {
 	var payload dto.ArrayOfIdDTO
