@@ -118,7 +118,7 @@ func (ctrl *CategoryController) GetCategoryOptions(ctx *fiber.Ctx) error {
 // @Tags Category
 // @Produce  json
 // @Router /api/category [delete]
-// @Param payload body dto.ArrayOfIdDTO true "Payload to delete"
+// @Param payload body dto.ArrayOfIdDTO true "Payload to bulk delete"
 // @Security BearerAuth
 func (ctrl *CategoryController) BulkDeleteCategories(ctx *fiber.Ctx) error {
 	var payload dto.ArrayOfIdDTO

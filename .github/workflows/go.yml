@@ -3,7 +3,7 @@ name: Deploy to Azure VM
 on:
   push:
     branches:
-      - main # Ganti sesuai branch kamu
+      - master # Ganti sesuai branch kamu
 
 jobs:
   deploy:
@@ -22,7 +22,10 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.AZURE_USER }}@${{ secrets.AZURE_HOST }} << EOF
             cd ${{ secrets.AZURE_DEPLOY_PATH }}
+            sudo git reset --hard HEAD
             sudo git pull
+            go install github.com/swaggo/swag/cmd/swag@latest
+            ~/go/bin/swag init --parseDependency
             go build -o be-shop-vision
             sudo systemctl restart be-shop-vision
           EOF
