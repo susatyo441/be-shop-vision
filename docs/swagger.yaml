@@ -79,6 +79,44 @@ definitions:
     - coverPhoto
     - name
     type: object
+  questionerdto.CreateQuestionerDTO:
+    properties:
+      instagram:
+        type: string
+      name:
+        type: string
+      questioner1:
+        maximum: 5
+        minimum: 1
+        type: integer
+      questioner2:
+        maximum: 5
+        minimum: 1
+        type: integer
+      questioner3:
+        maximum: 5
+        minimum: 1
+        type: integer
+      questioner4:
+        maximum: 5
+        minimum: 1
+        type: integer
+      questioner5:
+        maximum: 5
+        minimum: 1
+        type: integer
+      questioner6:
+        maximum: 5
+        minimum: 1
+        type: integer
+    required:
+    - questioner1
+    - questioner2
+    - questioner3
+    - questioner4
+    - questioner5
+    - questioner6
+    type: object
   transactiondto.CreateTransactionAttrDTO:
     properties:
       productID:
@@ -347,6 +385,62 @@ paths:
       summary: Update Products
       tags:
       - Product
+  /api/questioner:
+    get:
+      description: Get Questioner
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get Questioner
+      tags:
+      - Questioner
+    post:
+      description: Create Questioner
+      parameters:
+      - description: Payload to create
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/questionerdto.CreateQuestionerDTO'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Create Questioner
+      tags:
+      - Questioner
+  /api/questioner/{questionerId}:
+    get:
+      description: Get Questioner Detail
+      parameters:
+      - description: questioner ID
+        in: path
+        name: questionerId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get Questioner Detail
+      tags:
+      - Questioner
+  /api/questioner/credits:
+    get:
+      description: Get Credits list
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get Credits list
+      tags:
+      - Questioner
   /api/transaction:
     get:
       description: Get Transaction list

@@ -24,6 +24,7 @@ jobs:
             cd ${{ secrets.AZURE_DEPLOY_PATH }}
             sudo git reset --hard HEAD
             sudo git pull
+            sudo go get github.com/susatyo441/go-ta-utils
             go build -o be-shop-vision -buildvcs=false
             sudo systemctl restart be-shop-vision
           EOF

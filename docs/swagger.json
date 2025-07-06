@@ -342,6 +342,96 @@
                 "responses": {}
             }
         },
+        "/api/questioner": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get Questioner",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Questioner"
+                ],
+                "summary": "Get Questioner",
+                "responses": {}
+            },
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Create Questioner",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Questioner"
+                ],
+                "summary": "Create Questioner",
+                "parameters": [
+                    {
+                        "description": "Payload to create",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/questionerdto.CreateQuestionerDTO"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/api/questioner/credits": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get Credits list",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Questioner"
+                ],
+                "summary": "Get Credits list",
+                "responses": {}
+            }
+        },
+        "/api/questioner/{questionerId}": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get Questioner Detail",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Questioner"
+                ],
+                "summary": "Get Questioner Detail",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "questioner ID",
+                        "name": "questionerId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/api/transaction": {
             "get": {
                 "security": [
@@ -610,6 +700,55 @@
                     "items": {
                         "$ref": "#/definitions/productdto.ProductVariantDTO"
                     }
+                }
+            }
+        },
+        "questionerdto.CreateQuestionerDTO": {
+            "type": "object",
+            "required": [
+                "questioner1",
+                "questioner2",
+                "questioner3",
+                "questioner4",
+                "questioner5",
+                "questioner6"
+            ],
+            "properties": {
+                "instagram": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "questioner1": {
+                    "type": "integer",
+                    "maximum": 5,
+                    "minimum": 1
+                },
+                "questioner2": {
+                    "type": "integer",
+                    "maximum": 5,
+                    "minimum": 1
+                },
+                "questioner3": {
+                    "type": "integer",
+                    "maximum": 5,
+                    "minimum": 1
+                },
+                "questioner4": {
+                    "type": "integer",
+                    "maximum": 5,
+                    "minimum": 1
+                },
+                "questioner5": {
+                    "type": "integer",
+                    "maximum": 5,
+                    "minimum": 1
+                },
+                "questioner6": {
+                    "type": "integer",
+                    "maximum": 5,
+                    "minimum": 1
                 }
             }
         },

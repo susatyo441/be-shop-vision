@@ -9,7 +9,7 @@ require (
 	github.com/gofiber/swagger v1.1.1
 	github.com/joho/godotenv v1.5.1
 	github.com/stretchr/testify v1.10.0
-	github.com/susatyo441/go-ta-utils v0.0.0-20250307061529-5414e309992a
+	github.com/susatyo441/go-ta-utils v0.0.0-20250706103241-a5793fcfb2b6
 	github.com/swaggo/swag v1.16.4
 	github.com/valyala/fasthttp v1.58.0
 	go.mongodb.org/mongo-driver v1.17.3
