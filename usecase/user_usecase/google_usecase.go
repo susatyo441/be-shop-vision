@@ -22,13 +22,13 @@ func (uc *UserUseCase) LoginGoogleCallback(ctx context.Context, googleUserInfo *
 	// Jika user tidak ditemukan, buat user baru
 	if err != nil {
 		if err == mongo.ErrNoDocuments {
-			storeId, _ := primitive.ObjectIDFromHex("684923ad3e9aa4c2fd02d801")
+			storeId, _ := primitive.ObjectIDFromHex("67cd1f507488199eeb9b8579")
 			// Buat user baru dari data Google
 			newUser := model.User{
 				ID:    primitive.NewObjectID(),
 				Name:  googleUserInfo.Name,
 				Email: googleUserInfo.Email,
-				Store: model.AttributeEmbedded{ID: functions.MakePointer(storeId), Name: functions.MakePointer("Alfamart")},
+				Store: model.AttributeEmbedded{ID: functions.MakePointer(storeId), Name: functions.MakePointer("Warung Mamah Tyas")},
 			}
 
 			_, errCreate := uc.UserService.Create(ctx, newUser)
