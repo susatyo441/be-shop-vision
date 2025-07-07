@@ -15,5 +15,7 @@ func SetupUserController(app *fiber.App) {
 	// Tambahkan route ke dalam group
 	v2.Post("/register", c.RegisterUser)
 	v2.Post("/login", c.LoginUser)
-
+	v2.Get("/google/login", c.GoogleLogin)
+	// Rute ini adalah tempat Google akan mengarahkan user kembali setelah login
+	v2.Get("/google/callback", c.GoogleCallback)
 }

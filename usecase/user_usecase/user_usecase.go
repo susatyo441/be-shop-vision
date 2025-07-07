@@ -9,11 +9,13 @@ import (
 	"github.com/susatyo441/go-ta-utils/entity"
 	"github.com/susatyo441/go-ta-utils/model"
 	utilservice "github.com/susatyo441/go-ta-utils/service"
+	googleOauth2 "google.golang.org/api/oauth2/v2"
 )
 
 type IUserUseCase interface {
 	RegisterUser(ctx context.Context, body dto.RegisterUserDTO, files map[string]*multipart.FileHeader) *entity.HttpError
 	LoginUser(ctx context.Context, body dto.LoginUserDTO) (*dto.LoginResponseDTO, *entity.HttpError)
+	LoginGoogleCallback(ctx context.Context, googleUserInfo *googleOauth2.Userinfo) (*dto.LoginResponseDTO, *entity.HttpError)
 }
 
 type UserUseCase struct {

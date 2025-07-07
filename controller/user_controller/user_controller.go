@@ -4,10 +4,23 @@ import (
 	userdto "be-shop-vision/dto/user"
 	usecase "be-shop-vision/usecase/user_usecase"
 	"be-shop-vision/util"
+	"crypto/rand"
+	"encoding/base64"
+	"encoding/json"
+	"fmt"
+	"log"
 	"mime/multipart"
+	"net/http"
+	"os"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/joho/godotenv"
 	"github.com/susatyo441/go-ta-utils/response"
+	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/google"
+	googleOauth2 "google.golang.org/api/oauth2/v2"
+	"google.golang.org/api/option"
 )
 
 type makeUserUseCaseFunc = func() usecase.IUserUseCase
@@ -19,6 +32,104 @@ type UserController struct {
 
 func MakeUserController(makeUseCaseFunc makeUserUseCaseFunc) *UserController {
 	return &UserController{MakeUseCaseFunction: makeUseCaseFunc}
+}
+
+// --- Konfigurasi Google OAuth ---
+// Taruh ini di level package agar tidak dibuat ulang terus-menerus.
+var googleOauthConfig *oauth2.Config
+
+// Gunakan fungsi init() untuk setup konfigurasi sekali saat aplikasi dimulai.
+func init() {
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatal("Error loading .env file:", err)
+	}
+	googleOauthConfig = &oauth2.Config{
+		ClientID:     os.Getenv("GOOGLE_CLIENT_ID"),     // Ambil dari .env
+		ClientSecret: os.Getenv("GOOGLE_CLIENT_SECRET"), // Ambil dari .env
+		RedirectURL:  os.Getenv("GOOGLE_REDIRECT_URL"),  // Ambil dari .env
+		Scopes: []string{
+			"https://www.googleapis.com/auth/userinfo.email",
+			"https://www.googleapis.com/auth/userinfo.profile",
+		},
+		Endpoint: google.Endpoint,
+	}
+}
+
+// Metode baru untuk memulai alur login Google
+func (ctrl *UserController) GoogleLogin(ctx *fiber.Ctx) error {
+	// Buat state acak untuk proteksi CSRF dan simpan di cookie
+	expiration := time.Now().Add(20 * time.Minute)
+	b := make([]byte, 16)
+	rand.Read(b)
+	state := base64.URLEncoding.EncodeToString(b)
+	cookie := &fiber.Cookie{
+		Name:    "oauthstate",
+		Value:   state,
+		Expires: expiration,
+	}
+	ctx.Cookie(cookie)
+
+	// Arahkan user ke halaman login Google
+	url := googleOauthConfig.AuthCodeURL(state)
+	return ctx.Redirect(url, http.StatusTemporaryRedirect)
+}
+
+// Metode baru untuk menangani callback dari Google
+func (ctrl *UserController) GoogleCallback(ctx *fiber.Ctx) error {
+
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatal("Error loading .env file:", err)
+	}
+
+	// 1. Validasi state CSRF
+	oauthState := ctx.Cookies("oauthstate")
+	if ctx.Query("state") != oauthState {
+		return response.BadRequest(ctx, "Invalid oauth state", nil)
+	}
+
+	// 2. Tukarkan authorization code dengan token
+	code := ctx.Query("code")
+	token, err := googleOauthConfig.Exchange(ctx.Context(), code)
+	if err != nil {
+		return response.InternalServerError(ctx, "Failed to exchange token", err)
+	}
+
+	// 3. Dapatkan informasi user dari Google menggunakan token
+	oauth2Service, err := googleOauth2.NewService(ctx.Context(), option.WithTokenSource(googleOauthConfig.TokenSource(ctx.Context(), token)))
+	if err != nil {
+		return response.InternalServerError(ctx, "Failed to create google service", err)
+	}
+	userInfo, err := oauth2Service.Userinfo.Get().Do()
+	if err != nil {
+		return response.InternalServerError(ctx, "Failed to get user info", err)
+	}
+
+	// 4. Panggil Use Case
+	ctrl.UseCase = ctrl.MakeUseCaseFunction()
+	loginResponse, errUseCase := ctrl.UseCase.LoginGoogleCallback(ctx.Context(), userInfo)
+	if errUseCase != nil {
+		return response.SendResponse(ctx, errUseCase.Code, nil, errUseCase.Message)
+	}
+	// --- PERUBAHAN DIMULAI DI SINI ---
+
+	// 1. Ubah seluruh objek loginResponse menjadi JSON
+	jsonData, err := json.Marshal(loginResponse)
+	if err != nil {
+		return response.InternalServerError(ctx, "Failed to serialize response", err)
+	}
+
+	// 2. Encode JSON menjadi string Base64 yang aman untuk URL
+	encodedData := base64.URLEncoding.EncodeToString(jsonData)
+
+	// 3. Buat URL redirect dengan data yang sudah di-encode
+	frontendURL := os.Getenv("FRONTEND_URL")
+
+	redirectURL := fmt.Sprintf("%s/auth/callback?data=%s", frontendURL, encodedData)
+
+	// 4. Arahkan pengguna ke URL tersebut
+	return ctx.Redirect(redirectURL, http.StatusTemporaryRedirect)
 }
 
 // RegisterUser godoc
