@@ -76,7 +76,7 @@ func GetTransactionSummaryPipeline(storeID primitive.ObjectID) mongo.Pipeline {
 				"originalDay": bson.M{"$first": "$day"}, // Simpan hari asli (1-7)
 			}},
 			// Urutkan dari tanggal TERBARU (descending)
-			bson.M{"$sort": bson.M{"_id.date": -1}},
+			bson.M{"$sort": bson.M{"_id.date": 1}},
 			// Proyeksi: konversi angka hari ke nama hari
 			bson.M{"$project": bson.M{
 				"day": bson.M{"$switch": bson.M{
