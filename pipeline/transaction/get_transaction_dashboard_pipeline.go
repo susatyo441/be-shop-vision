@@ -14,7 +14,7 @@ func GetTransactionSummaryPipeline(storeID primitive.ObjectID) mongo.Pipeline {
 	startOfToday := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, now.Location())
 	startOfMonth := time.Date(now.Year(), now.Month(), 1, 0, 0, 0, 0, now.Location())
 	startOfYear := time.Date(now.Year(), 1, 1, 0, 0, 0, 0, now.Location())
-	sixDaysAgo := now.AddDate(0, 0, -6)
+	sevenDaysAgo := startOfToday.AddDate(0, 0, -6)
 
 	builder := pipeline.NewPipelineBuilder()
 
@@ -62,24 +62,32 @@ func GetTransactionSummaryPipeline(storeID primitive.ObjectID) mongo.Pipeline {
 			}},
 		},
 
-		// Total transaksi per hari dalam 6 hari terakhir
+		// [FIXED] Data harian 7 hari terakhir (termasuk hari ini)
 		"daily": bson.A{
-			bson.M{"$match": bson.M{"createdAt": bson.M{"$gte": sixDaysAgo, "$lte": now}}},
-			bson.M{"$group": bson.M{
-				"_id":   "$day",
-				"sales": bson.M{"$sum": "$totalPrice"},
+			bson.M{"$match": bson.M{
+				"createdAt": bson.M{"$gte": sevenDaysAgo, "$lte": now},
 			}},
-			bson.M{"$sort": bson.M{"_id": 1}},
+			// Kelompokkan per TANGGAL (bukan hari dalam minggu)
+			bson.M{"$group": bson.M{
+				"_id": bson.M{
+					"date": bson.M{"$dateToString": bson.M{"format": "%Y-%m-%d", "date": "$createdAt"}},
+				},
+				"sales":       bson.M{"$sum": "$totalPrice"},
+				"originalDay": bson.M{"$first": "$day"}, // Simpan hari asli (1-7)
+			}},
+			// Urutkan dari tanggal TERBARU (descending)
+			bson.M{"$sort": bson.M{"_id.date": -1}},
+			// Proyeksi: konversi angka hari ke nama hari
 			bson.M{"$project": bson.M{
 				"day": bson.M{"$switch": bson.M{
 					"branches": bson.A{
-						bson.M{"case": bson.M{"$eq": bson.A{"$_id", 1}}, "then": "Minggu"},
-						bson.M{"case": bson.M{"$eq": bson.A{"$_id", 2}}, "then": "Senin"},
-						bson.M{"case": bson.M{"$eq": bson.A{"$_id", 3}}, "then": "Selasa"},
-						bson.M{"case": bson.M{"$eq": bson.A{"$_id", 4}}, "then": "Rabu"},
-						bson.M{"case": bson.M{"$eq": bson.A{"$_id", 5}}, "then": "Kamis"},
-						bson.M{"case": bson.M{"$eq": bson.A{"$_id", 6}}, "then": "Jumat"},
-						bson.M{"case": bson.M{"$eq": bson.A{"$_id", 7}}, "then": "Sabtu"},
+						bson.M{"case": bson.M{"$eq": bson.A{"$originalDay", 1}}, "then": "Minggu"},
+						bson.M{"case": bson.M{"$eq": bson.A{"$originalDay", 2}}, "then": "Senin"},
+						bson.M{"case": bson.M{"$eq": bson.A{"$originalDay", 3}}, "then": "Selasa"},
+						bson.M{"case": bson.M{"$eq": bson.A{"$originalDay", 4}}, "then": "Rabu"},
+						bson.M{"case": bson.M{"$eq": bson.A{"$originalDay", 5}}, "then": "Kamis"},
+						bson.M{"case": bson.M{"$eq": bson.A{"$originalDay", 6}}, "then": "Jumat"},
+						bson.M{"case": bson.M{"$eq": bson.A{"$originalDay", 7}}, "then": "Sabtu"},
 					},
 					"default": "Unknown",
 				}},
