@@ -90,13 +90,7 @@ func GetTransactionPipeline(query dto.PaginationQuery, storeID primitive.ObjectI
 						"$cond": bson.M{
 							"if":   bson.M{"$gte": bson.A{"$createdAt", yesterdayStart}},
 							"then": "Kemarin",
-							"else": bson.M{
-								"$dateToString": bson.M{
-									"format":   "%d %B %Y", // Format: 11 Juli 2025
-									"date":     "$createdAt",
-									"timezone": "Asia/Jakarta", // Pastikan timezone sesuai
-								},
-							},
+							"else": "$createdAt", // <-- UBAH DI SINI: Kembalikan objek Date asli
 						},
 					},
 				},
