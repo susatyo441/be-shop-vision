@@ -2,6 +2,7 @@ package transactionpipeline
 
 import (
 	"be-shop-vision/dto"
+	"time"
 
 	"github.com/susatyo441/go-ta-utils/pipeline"
 	"go.mongodb.org/mongo-driver/bson"
@@ -16,6 +17,19 @@ func GetTransactionPipeline(query dto.PaginationQuery, storeID primitive.ObjectI
 		SortBy:    query.SortBy,
 		SortOrder: query.SortOrder,
 	}
+
+	location, err := time.LoadLocation("Asia/Jakarta")
+	if err != nil {
+		// Handle error, mungkin fallback ke UTC
+		location = time.UTC
+	}
+	now := time.Now().In(location)
+
+	// Tentukan waktu mulai hari ini (pukul 00:00:00)
+	todayStart := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, location)
+
+	// Tentukan waktu mulai kemarin (pukul 00:00:00)
+	yesterdayStart := todayStart.AddDate(0, 0, -1)
 
 	return pipeline.NewPipelineBuilder().
 
@@ -41,7 +55,7 @@ func GetTransactionPipeline(query dto.PaginationQuery, storeID primitive.ObjectI
 			"products.coverPhoto": "$productInfo.coverPhoto",
 		}).
 
-		// Group kembali products ke dalam array agar sesuai dengan []TransactionProductAttribute
+		// Group kembali products ke dalam array
 		Group(bson.D{
 			{Key: "_id", Value: "$_id"},
 			{Key: "totalPrice", Value: bson.D{{Key: "$first", Value: "$totalPrice"}}},
@@ -65,6 +79,31 @@ func GetTransactionPipeline(query dto.PaginationQuery, storeID primitive.ObjectI
 			}},
 		}).
 
+		// --- TAHAP BARU DIMULAI DI SINI ---
+		// Tambahkan field 'displayDate' berdasarkan 'createdAt'
+		Addfields(bson.M{
+			"displayDate": bson.M{
+				"$cond": bson.M{
+					"if":   bson.M{"$gte": bson.A{"$createdAt", todayStart}},
+					"then": "Hari ini",
+					"else": bson.M{
+						"$cond": bson.M{
+							"if":   bson.M{"$gte": bson.A{"$createdAt", yesterdayStart}},
+							"then": "Kemarin",
+							"else": bson.M{
+								"$dateToString": bson.M{
+									"format":   "%d %B %Y", // Format: 11 Juli 2025
+									"date":     "$createdAt",
+									"timezone": "Asia/Jakarta", // Pastikan timezone sesuai
+								},
+							},
+						},
+					},
+				},
+			},
+		}).
+		// --- TAHAP BARU BERAKHIR DI SINI ---
+
 		// Optional: filter berdasarkan search query (nama produk atau kategori)
 		Match(bson.M{
 			"$or": bson.A{
@@ -72,6 +111,7 @@ func GetTransactionPipeline(query dto.PaginationQuery, storeID primitive.ObjectI
 				bson.M{"products.category.name": pipeline.GenerateSearchCondition(query.Search)},
 			},
 		}).
+
 		// Pagination & Sort
 		Pagination(paginationQuery).
 		Build()
