@@ -90,7 +90,35 @@ func GetTransactionPipeline(query dto.PaginationQuery, storeID primitive.ObjectI
 						"$cond": bson.M{
 							"if":   bson.M{"$gte": bson.A{"$createdAt", yesterdayStart}},
 							"then": "Kemarin",
-							"else": "$createdAt", // <-- UBAH DI SINI: Kembalikan objek Date asli
+							"else": bson.M{
+								// Gabungkan hari, nama bulan, dan tahun secara manual
+								"$concat": bson.A{
+									bson.M{"$toString": bson.M{"$dayOfMonth": "$createdAt"}},
+									" ",
+									// Gunakan $switch untuk memetakan nomor bulan ke nama
+									bson.M{
+										"$switch": bson.M{
+											"branches": bson.A{
+												bson.M{"case": bson.M{"$eq": bson.A{bson.M{"$month": "$createdAt"}, 1}}, "then": "Januari"},
+												bson.M{"case": bson.M{"$eq": bson.A{bson.M{"$month": "$createdAt"}, 2}}, "then": "Februari"},
+												bson.M{"case": bson.M{"$eq": bson.A{bson.M{"$month": "$createdAt"}, 3}}, "then": "Maret"},
+												bson.M{"case": bson.M{"$eq": bson.A{bson.M{"$month": "$createdAt"}, 4}}, "then": "April"},
+												bson.M{"case": bson.M{"$eq": bson.A{bson.M{"$month": "$createdAt"}, 5}}, "then": "Mei"},
+												bson.M{"case": bson.M{"$eq": bson.A{bson.M{"$month": "$createdAt"}, 6}}, "then": "Juni"},
+												bson.M{"case": bson.M{"$eq": bson.A{bson.M{"$month": "$createdAt"}, 7}}, "then": "Juli"},
+												bson.M{"case": bson.M{"$eq": bson.A{bson.M{"$month": "$createdAt"}, 8}}, "then": "Agustus"},
+												bson.M{"case": bson.M{"$eq": bson.A{bson.M{"$month": "$createdAt"}, 9}}, "then": "September"},
+												bson.M{"case": bson.M{"$eq": bson.A{bson.M{"$month": "$createdAt"}, 10}}, "then": "Oktober"},
+												bson.M{"case": bson.M{"$eq": bson.A{bson.M{"$month": "$createdAt"}, 11}}, "then": "November"},
+												bson.M{"case": bson.M{"$eq": bson.A{bson.M{"$month": "$createdAt"}, 12}}, "then": "Desember"},
+											},
+											"default": "",
+										},
+									},
+									" ",
+									bson.M{"$toString": bson.M{"$year": "$createdAt"}},
+								},
+							},
 						},
 					},
 				},
