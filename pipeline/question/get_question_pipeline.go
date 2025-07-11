@@ -17,6 +17,10 @@ func GetQuestionerAggregatePipeline() mongo.Pipeline {
 			{Key: "question4", Value: bson.D{{Key: "$avg", Value: "$question4"}}},
 			{Key: "question5", Value: bson.D{{Key: "$avg", Value: "$question5"}}},
 			{Key: "question6", Value: bson.D{{Key: "$avg", Value: "$question6"}}},
+			{Key: "question7", Value: bson.D{{Key: "$avg", Value: "$question7"}}},
+			{Key: "question8", Value: bson.D{{Key: "$avg", Value: "$question8"}}},
+			{Key: "question9", Value: bson.D{{Key: "$avg", Value: "$question9"}}},
+			{Key: "question10", Value: bson.D{{Key: "$avg", Value: "$question10"}}},
 			{Key: "totalAnswer", Value: bson.D{{Key: "$sum", Value: 1}}},
 		}).
 		// Tambahkan average keseluruhan
@@ -29,6 +33,10 @@ func GetQuestionerAggregatePipeline() mongo.Pipeline {
 					"$question4",
 					"$question5",
 					"$question6",
+					"$question7",
+					"$question8",
+					"$question9",
+					"$question10",
 				},
 			},
 		}).
@@ -41,6 +49,10 @@ func GetQuestionerAggregatePipeline() mongo.Pipeline {
 			"question4":   1,
 			"question5":   1,
 			"question6":   1,
+			"question7":   1,
+			"question8":   1,
+			"question9":   1,
+			"question10":  1,
 			"average":     1,
 			"totalAnswer": 1,
 		}).

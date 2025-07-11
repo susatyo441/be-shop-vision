@@ -48,23 +48,28 @@ func (uc *QuestionerUseCase) GetQuestionerDetailByID(ctx context.Context, id pri
 		questioner.Question3 +
 		questioner.Question4 +
 		questioner.Question5 +
-		questioner.Question6)
+		questioner.Question6 + questioner.Question6 +
+		questioner.Question7 + questioner.Question8 + questioner.Question9 + questioner.Question10)
 
 	average := total / 6.0
 
 	// Buat response struct
 	detail := &questionerdto.QuestionerDetailWithAverage{
-		ID:        questioner.ID,
-		Name:      questioner.Name,
-		Question1: questioner.Question1,
-		Question2: questioner.Question2,
-		Question3: questioner.Question3,
-		Question4: questioner.Question4,
-		Question5: questioner.Question5,
-		Question6: questioner.Question6,
-		CreatedAt: questioner.CreatedAt,
-		UpdatedAt: questioner.UpdatedAt,
-		Average:   average,
+		ID:         questioner.ID,
+		Name:       questioner.Name,
+		Question1:  questioner.Question1,
+		Question2:  questioner.Question2,
+		Question3:  questioner.Question3,
+		Question4:  questioner.Question4,
+		Question5:  questioner.Question5,
+		Question6:  questioner.Question6,
+		Question7:  questioner.Question7,
+		Question8:  questioner.Question8,
+		Question9:  questioner.Question9,
+		Question10: questioner.Question10,
+		CreatedAt:  questioner.CreatedAt,
+		UpdatedAt:  questioner.UpdatedAt,
+		Average:    average,
 	}
 
 	return detail, nil

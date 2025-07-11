@@ -10,13 +10,17 @@ import (
 
 func (uc *QuestionerUseCase) CreateQuestioner(ctx context.Context, body dto.CreateQuestionerDTO) *entity.HttpError {
 	questioner, err := uc.QuestionerService.Create(ctx, model.Questioner{
-		Name:      body.Name,
-		Question1: body.Questioner1,
-		Question2: body.Questioner2,
-		Question3: body.Questioner3,
-		Question4: body.Questioner4,
-		Question5: body.Questioner5,
-		Question6: body.Questioner6,
+		Name:       body.Name,
+		Question1:  body.Questioner1,
+		Question2:  body.Questioner2,
+		Question3:  body.Questioner3,
+		Question4:  body.Questioner4,
+		Question5:  body.Questioner5,
+		Question6:  body.Questioner6,
+		Question7:  body.Questioner7,
+		Question8:  body.Questioner8,
+		Question9:  body.Questioner9,
+		Question10: body.Questioner10,
 	})
 	if err != nil {
 		return entity.InternalServerError(err.Error())
