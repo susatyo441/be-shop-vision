@@ -109,13 +109,33 @@ definitions:
         maximum: 5
         minimum: 1
         type: integer
+      questioner7:
+        maximum: 5
+        minimum: 1
+        type: integer
+      questioner8:
+        maximum: 5
+        minimum: 1
+        type: integer
+      questioner9:
+        maximum: 5
+        minimum: 1
+        type: integer
+      questioner10:
+        maximum: 5
+        minimum: 1
+        type: integer
     required:
     - questioner1
+    - questioner10
     - questioner2
     - questioner3
     - questioner4
     - questioner5
     - questioner6
+    - questioner7
+    - questioner8
+    - questioner9
     type: object
   transactiondto.CreateTransactionAttrDTO:
     properties:

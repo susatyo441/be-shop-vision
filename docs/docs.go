@@ -715,11 +715,15 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "questioner1",
+                "questioner10",
                 "questioner2",
                 "questioner3",
                 "questioner4",
                 "questioner5",
-                "questioner6"
+                "questioner6",
+                "questioner7",
+                "questioner8",
+                "questioner9"
             ],
             "properties": {
                 "instagram": {
@@ -729,6 +733,11 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "questioner1": {
+                    "type": "integer",
+                    "maximum": 5,
+                    "minimum": 1
+                },
+                "questioner10": {
                     "type": "integer",
                     "maximum": 5,
                     "minimum": 1
@@ -754,6 +763,21 @@ const docTemplate = `{
                     "minimum": 1
                 },
                 "questioner6": {
+                    "type": "integer",
+                    "maximum": 5,
+                    "minimum": 1
+                },
+                "questioner7": {
+                    "type": "integer",
+                    "maximum": 5,
+                    "minimum": 1
+                },
+                "questioner8": {
+                    "type": "integer",
+                    "maximum": 5,
+                    "minimum": 1
+                },
+                "questioner9": {
                     "type": "integer",
                     "maximum": 5,
                     "minimum": 1
