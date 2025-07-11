@@ -31,6 +31,7 @@ type TransactionAggregateDto struct {
 	TotalPrice int `json:"totalPrice" bson:"totalPrice"`
 
 	StoreID primitive.ObjectID `json:"storeId" bson:"storeId"`
+	DisplayDate string `json:"displayDate" bson:"displayDate"`
 
 	CreatedAt time.Time `json:"createdAt" bson:"createdAt"`
 
