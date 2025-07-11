@@ -2,7 +2,6 @@ package transactionpipeline
 
 import (
 	"be-shop-vision/dto"
-	"time"
 
 	"github.com/susatyo441/go-ta-utils/pipeline"
 	"go.mongodb.org/mongo-driver/bson"
@@ -17,19 +16,6 @@ func GetTransactionPipeline(query dto.PaginationQuery, storeID primitive.ObjectI
 		SortBy:    query.SortBy,
 		SortOrder: query.SortOrder,
 	}
-
-	location, err := time.LoadLocation("Asia/Jakarta")
-	if err != nil {
-		// Handle error, mungkin fallback ke UTC
-		location = time.UTC
-	}
-	now := time.Now().In(location)
-
-	// Tentukan waktu mulai hari ini (pukul 00:00:00)
-	todayStart := time.Date(now.Year(), now.Month(), now.Day(), 0, 0, 0, 0, location)
-
-	// Tentukan waktu mulai kemarin (pukul 00:00:00)
-	yesterdayStart := todayStart.AddDate(0, 0, -1)
 
 	return pipeline.NewPipelineBuilder().
 
@@ -55,6 +41,9 @@ func GetTransactionPipeline(query dto.PaginationQuery, storeID primitive.ObjectI
 			"products.coverPhoto": "$productInfo.coverPhoto",
 		}).
 
+		// --- TAHAP BARU YANG LEBIH ANDAL ---
+		// Tambahkan field sementara untuk perhitungan tanggal, lalu buat displayDate
+
 		// Group kembali products ke dalam array
 		Group(bson.D{
 			{Key: "_id", Value: "$_id"},
@@ -78,24 +67,43 @@ func GetTransactionPipeline(query dto.PaginationQuery, storeID primitive.ObjectI
 				}},
 			}},
 		}).
+		Addfields(bson.M{
+			// Hitung awal hari ini di zona waktu 'Asia/Jakarta'
+			"todayStart": bson.M{
+				"$dateTrunc": bson.M{
+					"date":     "$$NOW",
+					"unit":     "day",
+					"timezone": "Asia/Jakarta",
+				},
+			},
+		}).
+		Addfields(bson.M{
+			// Hitung awal kemarin berdasarkan awal hari ini
+			"yesterdayStart": bson.M{
+				"$dateSubtract": bson.M{
+					"startDate": "$todayStart",
+					"unit":      "day",
+					"amount":    1,
+				},
+			},
+		}).
 
 		// --- TAHAP BARU DIMULAI DI SINI ---
 		// Tambahkan field 'displayDate' berdasarkan 'createdAt'
 		Addfields(bson.M{
+			// Sekarang lakukan perbandingan menggunakan variabel yang sudah dihitung di MongoDB
 			"displayDate": bson.M{
 				"$cond": bson.M{
-					"if":   bson.M{"$gte": bson.A{"$createdAt", todayStart}},
+					"if":   bson.M{"$gte": bson.A{"$createdAt", "$todayStart"}},
 					"then": "Hari ini",
 					"else": bson.M{
 						"$cond": bson.M{
-							"if":   bson.M{"$gte": bson.A{"$createdAt", yesterdayStart}},
+							"if":   bson.M{"$gte": bson.A{"$createdAt", "$yesterdayStart"}},
 							"then": "Kemarin",
 							"else": bson.M{
-								// Gabungkan hari, nama bulan, dan tahun secara manual
+								// Fallback ke logika format tanggal yang kompleks
 								"$concat": bson.A{
-									bson.M{"$toString": bson.M{"$dayOfMonth": "$createdAt"}},
-									" ",
-									// Gunakan $switch untuk memetakan nomor bulan ke nama
+									bson.M{"$toString": bson.M{"$dayOfMonth": "$createdAt"}}, " ",
 									bson.M{
 										"$switch": bson.M{
 											"branches": bson.A{
@@ -111,11 +119,9 @@ func GetTransactionPipeline(query dto.PaginationQuery, storeID primitive.ObjectI
 												bson.M{"case": bson.M{"$eq": bson.A{bson.M{"$month": "$createdAt"}, 10}}, "then": "Oktober"},
 												bson.M{"case": bson.M{"$eq": bson.A{bson.M{"$month": "$createdAt"}, 11}}, "then": "November"},
 												bson.M{"case": bson.M{"$eq": bson.A{bson.M{"$month": "$createdAt"}, 12}}, "then": "Desember"},
-											},
-											"default": "",
+											}, "default": "",
 										},
-									},
-									" ",
+									}, " ",
 									bson.M{"$toString": bson.M{"$year": "$createdAt"}},
 								},
 							},
@@ -123,6 +129,12 @@ func GetTransactionPipeline(query dto.PaginationQuery, storeID primitive.ObjectI
 					},
 				},
 			},
+		}).
+
+		// Hapus field sementara yang tidak lagi diperlukan
+		Project(bson.M{
+			"todayStart":     0,
+			"yesterdayStart": 0,
 		}).
 		// --- TAHAP BARU BERAKHIR DI SINI ---
 
