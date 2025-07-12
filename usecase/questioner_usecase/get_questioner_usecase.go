@@ -48,7 +48,7 @@ func (uc *QuestionerUseCase) GetQuestionerDetailByID(ctx context.Context, id pri
 		questioner.Question3 +
 		questioner.Question4 +
 		questioner.Question5 +
-		questioner.Question6 + questioner.Question6 +
+		questioner.Question6 +
 		questioner.Question7 + questioner.Question8 + questioner.Question9 + questioner.Question10)
 
 	average := total / 10.0
