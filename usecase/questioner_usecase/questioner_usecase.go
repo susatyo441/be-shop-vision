@@ -16,6 +16,7 @@ type IQuestionerUseCase interface {
 	GetCredits(ctx context.Context) ([]model.Credit, *entity.HttpError)
 	GetQuestioner(ctx context.Context) (*dto.QuestionerAggregateDto, *entity.HttpError)
 	GetQuestionerDetailByID(ctx context.Context, id primitive.ObjectID) (*dto.QuestionerDetailWithAverage, *entity.HttpError)
+	GetQuestionerDetailStats(ctx context.Context) (*dto.QuestionerStatistics, *entity.HttpError)
 }
 
 type QuestionerUseCase struct {

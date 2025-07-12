@@ -413,6 +413,24 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/api/questioner/stats": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Get Questioner Detail Stats",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Questioner"
+                ],
+                "summary": "Get Questioner Detail Stats",
+                "responses": {}
+            }
+        },
         "/api/questioner/{questionerId}": {
             "get": {
                 "security": [

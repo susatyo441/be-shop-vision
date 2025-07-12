@@ -15,6 +15,7 @@ func SetupQuestionerController(app *fiber.App) {
 	// Tambahkan route ke dalam group
 	v2.Post("/", c.CreateQuestioner)
 	v2.Get("/credits", c.GetCreditList)
+	v2.Get("/stats", c.GetQuestionerDetailStats)
 	v2.Get("/:questionerId", c.GetQuestionerDetail)
 	v2.Get("/", c.GetQuestioner)
 

@@ -461,6 +461,17 @@ paths:
       summary: Get Credits list
       tags:
       - Questioner
+  /api/questioner/stats:
+    get:
+      description: Get Questioner Detail Stats
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get Questioner Detail Stats
+      tags:
+      - Questioner
   /api/transaction:
     get:
       description: Get Transaction list

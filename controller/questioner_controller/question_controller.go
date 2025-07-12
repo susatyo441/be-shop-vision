@@ -90,6 +90,25 @@ func (c *QuestionerController) GetQuestioner(ctx *fiber.Ctx) error {
 	return response.Success(ctx, "successfully get questioner summary", result)
 }
 
+// GetQuestionerDetailStats godoc
+// @Summary Get Questioner Detail Stats
+// @Description Get Questioner Detail Stats
+// @Tags Questioner
+// @Produce  json
+// @Router /api/questioner/stats [get]
+// @Security BearerAuth
+func (ctrl *QuestionerController) GetQuestionerDetailStats(ctx *fiber.Ctx) error {
+
+	ctrl.UseCase = ctrl.MakeUseCaseFunction()
+
+	questionerDetailStats, errUseCase := ctrl.UseCase.GetQuestionerDetailStats(ctx.Context())
+	if errUseCase != nil {
+		return response.SendResponse(ctx, errUseCase.Code, nil, errUseCase.Message)
+	}
+
+	return response.Success(ctx, "Successfully retrieved questioner detail stats", questionerDetailStats)
+}
+
 // GetQuestionerDetail godoc
 // @Summary Get Questioner Detail
 // @Description Get Questioner Detail

@@ -40,3 +40,27 @@ type QuestionerDetailWithAverage struct {
 
 	Average float64 `json:"average"`
 }
+
+type QuestionStats struct {
+	QuestionNumber int     `json:"questionNumber"`
+	Count1         int     `json:"count1"`
+	Count2         int     `json:"count2"`
+	Count3         int     `json:"count3"`
+	Count4         int     `json:"count4"`
+	Count5         int     `json:"count5"`
+	Average        float64 `json:"average"`
+}
+
+type QuestionerStatistics struct {
+	TotalRespondents int             `json:"totalRespondents"`
+	Questions        []QuestionStats `json:"questions"`
+}
+
+type Stat struct {
+	Count1  int
+	Count2  int
+	Count3  int
+	Count4  int
+	Count5  int
+	Average float64
+}
