@@ -16,6 +16,7 @@ func SetupProductController(app *fiber.App) {
 	// Tambahkan route ke dalam group
 	v2.Post("/", c.CreateProduct)
 	v2.Put("/:productId", c.UpdateProduct)
+	v2.Get("/export-photos", c.ExportAllProductPhotos)
 	v2.Delete("/", c.BulkDeleteProducts)
 	v2.Get("/:productId", c.GetProductDetail)
 	v2.Get("/", c.GetProductList)

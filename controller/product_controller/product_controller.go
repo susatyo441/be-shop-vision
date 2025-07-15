@@ -8,8 +8,13 @@ import (
 	"be-shop-vision/util"
 	"bytes"
 	"errors"
+	"fmt"
+	"io"
 	"mime/multipart"
+	"os"
+	"path/filepath"
 	"reflect"
+	"strings"
 	"time"
 
 	"github.com/gofiber/fiber/v2"
@@ -213,9 +218,9 @@ func (c *ProductController) GetProductList(ctx *fiber.Ctx) error {
 	return response.Success(ctx, "successfully get product list", result)
 }
 
-// Export Data godoc
-// @Summary Export Data
-// @Description Export All Data
+// Export Database godoc
+// @Summary Export Database
+// @Description Export All Database
 // @Tags Export
 // @Produce  json
 // @Router /api/export-all [get]
@@ -317,4 +322,81 @@ func (c *ProductController) ExportAll(ctx *fiber.Ctx) error {
 	ctx.Set("Content-Disposition", "attachment; filename=export_"+time.Now().Format("20060102150405")+".zip")
 
 	return ctx.Send(buf.Bytes())
+}
+
+// ExportAllProductPhotos godoc
+// @Summary Export All Product Photos
+// @Description Export All Product Photos
+// @Tags Export
+// @Produce  json
+// @Router /api/product/export-photos [get]
+// @Security BearerAuth
+func (c *ProductController) ExportAllProductPhotos(ctx *fiber.Ctx) error {
+	storeID := ctx.Locals(middleware.StoreKey).(primitive.ObjectID)
+	folderPath := fmt.Sprintf("../acts-files/%s/product", storeID.Hex()) // Disarankan menggunakan path relatif dari root proyek
+
+	// 2. Validasi apakah folder ada dan merupakan sebuah direktori
+	info, err := os.Stat(folderPath)
+	if os.IsNotExist(err) {
+		return response.NotFound(ctx, fmt.Sprintf("Folder untuk toko ini tidak ditemukan: %s", folderPath), nil)
+	}
+	if !info.IsDir() {
+		return response.BadRequest(ctx, fmt.Sprintf("Path yang ditemukan bukan sebuah folder: %s", folderPath), nil)
+	}
+
+	// 3. Atur HTTP Header untuk respons file download
+	zipFileName := fmt.Sprintf("semua-foto-%s.zip", storeID.Hex())
+	ctx.Set("Content-Type", "application/zip")
+	ctx.Set("Content-Disposition", fmt.Sprintf("attachment; filename=\"%s\"", zipFileName))
+
+	// 4. Buat zip.Writer yang akan menulis langsung ke response body Fiber
+	// INI PERUBAHAN UTAMA: Gunakan ctx.Response().BodyWriter()
+	zipWriter := zip.NewWriter(ctx.Response().BodyWriter())
+	defer zipWriter.Close()
+
+	// 5. Jelajahi folder secara rekursif menggunakan filepath.Walk
+	err = filepath.Walk(folderPath, func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+		if info.IsDir() {
+			return nil
+		}
+
+		header, err := zip.FileInfoHeader(info)
+		if err != nil {
+			return err
+		}
+
+		header.Name, err = filepath.Rel(folderPath, path)
+		if err != nil {
+			return err
+		}
+		header.Name = strings.ReplaceAll(header.Name, "\\", "/")
+		header.Method = zip.Deflate
+
+		writer, err := zipWriter.CreateHeader(header)
+		if err != nil {
+			return err
+		}
+
+		fileToZip, err := os.Open(path)
+		if err != nil {
+			return err
+		}
+		defer fileToZip.Close()
+
+		_, err = io.Copy(writer, fileToZip)
+		return err
+	})
+
+	if err != nil {
+		// Error saat zipping, kembalikan response error server
+		// Perhatikan bahwa header mungkin sudah terkirim, klien mungkin menerima file korup.
+		// Ini adalah batasan dari streaming HTTP.
+		return response.InternalServerError(ctx, "Gagal saat memproses file zip: "+err.Error(), nil)
+	}
+
+	// PENTING: Kembalikan nil untuk menandakan ke Fiber bahwa response berhasil ditangani
+	return nil
 }
