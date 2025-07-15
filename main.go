@@ -23,7 +23,7 @@ func InitializeApp(isTest bool) (*fiber.App, string) {
 	}
 
 	app := fiber.New(fiber.Config{
-		BodyLimit: 100 * 1024 * 1024, // 100MB
+		BodyLimit: 500 * 1024 * 1024, // 500MB
 	})
 
 	// BasicAuth middleware configuration

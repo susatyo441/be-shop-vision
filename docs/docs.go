@@ -172,14 +172,14 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Export All Data",
+                "description": "Export All Database",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Export"
                 ],
-                "summary": "Export Data",
+                "summary": "Export Database",
                 "responses": {}
             }
         },
@@ -286,6 +286,24 @@ const docTemplate = `{
                         }
                     }
                 ],
+                "responses": {}
+            }
+        },
+        "/api/product/export-photos": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Export All Product Photos",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Export"
+                ],
+                "summary": "Export All Product Photos",
                 "responses": {}
             }
         },
