@@ -368,6 +368,42 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/api/product/{productId}/stock": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update Products Stock",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Update Products Stock",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "product ID",
+                        "name": "productId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Payload to update stock",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/productdto.UpdateProductStockDTO"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/api/questioner": {
             "get": {
                 "security": [
@@ -744,6 +780,21 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/productdto.ProductVariantDTO"
                     }
+                }
+            }
+        },
+        "productdto.UpdateProductStockDTO": {
+            "type": "object",
+            "required": [
+                "stock"
+            ],
+            "properties": {
+                "stock": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "variants": {
+                    "type": "string"
                 }
             }
         },

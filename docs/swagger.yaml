@@ -79,6 +79,16 @@ definitions:
     - coverPhoto
     - name
     type: object
+  productdto.UpdateProductStockDTO:
+    properties:
+      stock:
+        minimum: 0
+        type: integer
+      variants:
+        type: string
+    required:
+    - stock
+    type: object
   questionerdto.CreateQuestionerDTO:
     properties:
       instagram:
@@ -403,6 +413,29 @@ paths:
       security:
       - BearerAuth: []
       summary: Update Products
+      tags:
+      - Product
+  /api/product/{productId}/stock:
+    put:
+      description: Update Products Stock
+      parameters:
+      - description: product ID
+        in: path
+        name: productId
+        required: true
+        type: string
+      - description: Payload to update stock
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/productdto.UpdateProductStockDTO'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Update Products Stock
       tags:
       - Product
   /api/product/export-photos:
