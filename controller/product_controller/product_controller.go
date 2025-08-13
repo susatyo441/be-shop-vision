@@ -168,14 +168,9 @@ func (ctrl *ProductController) UpdateProduct(ctx *fiber.Ctx) error {
 // @Param payload body productdto.UpdateProductStockDTO true "Payload to update stock"
 // @Security BearerAuth
 func (ctrl *ProductController) UpdateProductStock(ctx *fiber.Ctx) error {
-	// Ambil productId dari parameter
-	productId, paramErr := functions.ParamToObjectID(ctx, "productId")
-	if paramErr != nil {
-		return response.BadRequest(ctx, "Invalid product id format", nil)
-	}
 
 	// Parsing payload
-	var payload productdto.UpdateProductStockDTO
+	var payload productdto.UpdateProductStockRequestDTO
 	if err := ctx.BodyParser(&payload); err != nil {
 		return response.BadRequest(ctx, "Invalid request body", nil)
 	}
@@ -193,7 +188,7 @@ func (ctrl *ProductController) UpdateProductStock(ctx *fiber.Ctx) error {
 
 	// Panggil UseCase untuk update produk
 	ctrl.UseCase = ctrl.MakeUseCaseFunction()
-	err := ctrl.UseCase.UpdateProductStock(ctx.Context(), productId, payload, storeId)
+	err := ctrl.UseCase.UpdateProductStock(ctx.Context(), payload.Products, storeId)
 	if err != nil {
 		return response.SendResponse(ctx, err.Code, nil, err.Message)
 	}

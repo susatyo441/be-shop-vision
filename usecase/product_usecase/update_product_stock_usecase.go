@@ -13,38 +13,44 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-func (uc *ProductUseCase) UpdateProductStock(ctx context.Context, productID primitive.ObjectID, body dto.UpdateProductStockDTO, storeID primitive.ObjectID) *entity.HttpError {
-	// 1️⃣ Cari produk lama
-	product, err := uc.ProductService.FindOne(ctx, bson.M{"_id": productID, "storeId": storeID})
-	if err != nil {
-		if err == mongo.ErrNoDocuments {
-			return entity.BadRequest("Produk tidak ditemukan")
+func (uc *ProductUseCase) UpdateProductStock(ctx context.Context, bodies []dto.UpdateProductStockDTO, storeID primitive.ObjectID) *entity.HttpError {
+	for _, body := range bodies {
+		productID, errObjectID := primitive.ObjectIDFromHex(body.ProductID)
+		if errObjectID != nil {
+			return entity.BadRequest("ID produk tidak valid")
 		}
-		return entity.InternalServerError(err.Error())
-	}
-
-	variants := make([]model.ProductVariantsAttr, len(product.Variants))
-	for i, variantDTO := range product.Variants {
-		variants[i] = model.ProductVariantsAttr{
-			Name:         variantDTO.Name,
-			Price:        variantDTO.Price,
-			CapitalPrice: nil,
-			Stock:        functions.Ternary(*body.Variants == variantDTO.Name, body.Stock, variantDTO.Stock),
+		// 1️⃣ Cari produk lama
+		product, err := uc.ProductService.FindOne(ctx, bson.M{"_id": productID, "storeId": storeID})
+		if err != nil {
+			if err == mongo.ErrNoDocuments {
+				return entity.BadRequest("Produk tidak ditemukan")
+			}
+			return entity.InternalServerError(err.Error())
 		}
-	}
 
-	if body.Variants == nil || *body.Variants == "" {
-		product.Stock = functions.MakePointer(body.Stock)
+		variants := make([]model.ProductVariantsAttr, len(product.Variants))
+		for i, variantDTO := range product.Variants {
+			variants[i] = model.ProductVariantsAttr{
+				Name:         variantDTO.Name,
+				Price:        variantDTO.Price,
+				CapitalPrice: nil,
+				Stock:        functions.Ternary(*body.Variants == variantDTO.Name, body.Stock, variantDTO.Stock),
+			}
+		}
 
-	}
-	// 7️⃣ Update produk ke database
-	updateData := bson.M{
-		"stock":    product.Stock,
-		"variants": variants,
-	}
+		if body.Variants == nil || *body.Variants == "" {
+			product.Stock = functions.MakePointer(body.Stock)
 
-	if _, err := uc.ProductService.UpdateOne(ctx, bson.M{"_id": productID, "storeId": storeID}, bson.M{"$set": updateData}); err != nil {
-		return entity.InternalServerError("Gagal update produk: " + err.Error())
+		}
+		// 7️⃣ Update produk ke database
+		updateData := bson.M{
+			"stock":    product.Stock,
+			"variants": variants,
+		}
+
+		if _, err := uc.ProductService.UpdateOne(ctx, bson.M{"_id": productID, "storeId": storeID}, bson.M{"$set": updateData}); err != nil {
+			return entity.InternalServerError("Gagal update produk: " + err.Error())
+		}
 	}
 
 	return nil
