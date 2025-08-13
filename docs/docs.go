@@ -324,13 +324,6 @@ const docTemplate = `{
                 "summary": "Update Products Stock",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "product ID",
-                        "name": "productId",
-                        "in": "path",
-                        "required": true
-                    },
-                    {
                         "description": "Payload to update stock",
                         "name": "payload",
                         "in": "body",

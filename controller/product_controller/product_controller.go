@@ -164,7 +164,6 @@ func (ctrl *ProductController) UpdateProduct(ctx *fiber.Ctx) error {
 // @Tags Product
 // @Produce  json
 // @Router /api/product/stock [patch]
-// @Param productId path string true "product ID"
 // @Param payload body productdto.UpdateProductStockDTO true "Payload to update stock"
 // @Security BearerAuth
 func (ctrl *ProductController) UpdateProductStock(ctx *fiber.Ctx) error {
@@ -172,7 +171,7 @@ func (ctrl *ProductController) UpdateProductStock(ctx *fiber.Ctx) error {
 	// Parsing payload
 	var payload productdto.UpdateProductStockRequestDTO
 	if err := ctx.BodyParser(&payload); err != nil {
-		return response.BadRequest(ctx, "Invalid request body", nil)
+		return response.BadRequest(ctx, err.Error(), nil)
 	}
 
 	// Validasi payload

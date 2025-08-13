@@ -433,11 +433,6 @@ paths:
     patch:
       description: Update Products Stock
       parameters:
-      - description: product ID
-        in: path
-        name: productId
-        required: true
-        type: string
       - description: Payload to update stock
         in: body
         name: payload
