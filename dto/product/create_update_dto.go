@@ -23,3 +23,8 @@ type UpdateProductDTO struct {
 	Stock      *int                `json:"stock" bson:"stock" validate:"omitempty,gte=0"`
 	Variants   []ProductVariantDTO `json:"variants" bson:"variants"`
 }
+
+type UpdateProductStockDTO struct {
+	Stock    int     `json:"stock" bson:"stock" validate:"required,gte=0"`
+	Variants *string `json:"variants" bson:"variants" validate:"omitempty"`
+}
