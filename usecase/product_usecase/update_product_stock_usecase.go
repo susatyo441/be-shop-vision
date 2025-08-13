@@ -34,11 +34,11 @@ func (uc *ProductUseCase) UpdateProductStock(ctx context.Context, bodies []dto.U
 				Name:         variantDTO.Name,
 				Price:        variantDTO.Price,
 				CapitalPrice: nil,
-				Stock:        functions.Ternary(*body.Variants == variantDTO.Name, body.Stock, variantDTO.Stock),
+				Stock:        functions.Ternary(*body.Variant == variantDTO.Name, body.Stock, variantDTO.Stock),
 			}
 		}
 
-		if body.Variants == nil || *body.Variants == "" {
+		if body.Variant == nil || *body.Variant == "" {
 			product.Stock = functions.MakePointer(body.Stock)
 
 		}

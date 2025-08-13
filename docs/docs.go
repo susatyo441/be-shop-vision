@@ -797,7 +797,7 @@ const docTemplate = `{
                     "type": "integer",
                     "minimum": 0
                 },
-                "variants": {
+                "variant": {
                     "type": "string"
                 }
             }

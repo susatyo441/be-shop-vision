@@ -86,7 +86,7 @@ definitions:
       stock:
         minimum: 0
         type: integer
-      variants:
+      variant:
         type: string
     required:
     - productId
