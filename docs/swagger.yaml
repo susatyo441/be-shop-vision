@@ -81,12 +81,15 @@ definitions:
     type: object
   productdto.UpdateProductStockDTO:
     properties:
+      productId:
+        type: string
       stock:
         minimum: 0
         type: integer
       variants:
         type: string
     required:
+    - productId
     - stock
     type: object
   questionerdto.CreateQuestionerDTO:
@@ -415,8 +418,19 @@ paths:
       summary: Update Products
       tags:
       - Product
-  /api/product/{productId}/stock:
-    put:
+  /api/product/export-photos:
+    get:
+      description: Export All Product Photos
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Export All Product Photos
+      tags:
+      - Export
+  /api/product/stock:
+    patch:
       description: Update Products Stock
       parameters:
       - description: product ID
@@ -438,17 +452,6 @@ paths:
       summary: Update Products Stock
       tags:
       - Product
-  /api/product/export-photos:
-    get:
-      description: Export All Product Photos
-      produces:
-      - application/json
-      responses: {}
-      security:
-      - BearerAuth: []
-      summary: Export All Product Photos
-      tags:
-      - Export
   /api/questioner:
     get:
       description: Get Questioner

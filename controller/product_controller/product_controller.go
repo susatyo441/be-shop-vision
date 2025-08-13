@@ -163,7 +163,7 @@ func (ctrl *ProductController) UpdateProduct(ctx *fiber.Ctx) error {
 // @Description Update Products Stock
 // @Tags Product
 // @Produce  json
-// @Router /api/product/{productId}/stock [put]
+// @Router /api/product/stock [patch]
 // @Param productId path string true "product ID"
 // @Param payload body productdto.UpdateProductStockDTO true "Payload to update stock"
 // @Security BearerAuth
