@@ -137,6 +137,13 @@ definitions:
     - questioner8
     - questioner9
     type: object
+  storedto.CreateStoreDTO:
+    properties:
+      name:
+        type: string
+    required:
+    - name
+    type: object
   transactiondto.CreateTransactionAttrDTO:
     properties:
       productID:
@@ -483,6 +490,34 @@ paths:
       summary: Get Questioner Detail Stats
       tags:
       - Questioner
+  /api/store:
+    get:
+      description: Get Stores
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Get Stores
+      tags:
+      - Store
+    post:
+      description: Create Store
+      parameters:
+      - description: Payload to create
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/storedto.CreateStoreDTO'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - BearerAuth: []
+      summary: Create Store
+      tags:
+      - Store
   /api/transaction:
     get:
       description: Get Transaction list
