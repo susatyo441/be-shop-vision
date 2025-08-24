@@ -307,6 +307,35 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/api/product/stock": {
+            "patch": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update Products Stock",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Product"
+                ],
+                "summary": "Update Products Stock",
+                "parameters": [
+                    {
+                        "description": "Payload to update stock",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/productdto.UpdateProductStockDTO"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/api/product/{productId}": {
             "get": {
                 "security": [
@@ -789,6 +818,25 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/productdto.ProductVariantDTO"
                     }
+                }
+            }
+        },
+        "productdto.UpdateProductStockDTO": {
+            "type": "object",
+            "required": [
+                "productId",
+                "stock"
+            ],
+            "properties": {
+                "productId": {
+                    "type": "string"
+                },
+                "stock": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "variant": {
+                    "type": "string"
                 }
             }
         },

@@ -90,6 +90,9 @@ func (uc *ProductUseCase) CreateProduct(ctx context.Context, body dto.CreateProd
 		key++
 		productPhoto := model.ProductPhoto{Photo: photo, ProductID: product.ID, Key: key}
 		_, err = uc.ProductPhotoService.Create(ctx, productPhoto)
+		if err != nil {
+			return entity.InternalServerError(err.Error())
+		}
 	}
 
 	return nil

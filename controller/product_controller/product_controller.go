@@ -158,6 +158,43 @@ func (ctrl *ProductController) UpdateProduct(ctx *fiber.Ctx) error {
 	return response.Success(ctx, "Successfully updated product", nil)
 }
 
+// UpdateProduct godoc
+// @Summary Update Products Stock
+// @Description Update Products Stock
+// @Tags Product
+// @Produce  json
+// @Router /api/product/stock [patch]
+// @Param payload body productdto.UpdateProductStockDTO true "Payload to update stock"
+// @Security BearerAuth
+func (ctrl *ProductController) UpdateProductStock(ctx *fiber.Ctx) error {
+
+	// Parsing payload
+	var payload productdto.UpdateProductStockRequestDTO
+	if err := ctx.BodyParser(&payload); err != nil {
+		return response.BadRequest(ctx, err.Error(), nil)
+	}
+
+	// Validasi payload
+	if err := util.ValidateStruct(payload); err != nil {
+		return response.BadRequest(ctx, err.Error(), nil)
+	}
+
+	// Ambil storeId dari context
+	storeId, ok := ctx.Locals(middleware.StoreKey).(primitive.ObjectID)
+	if !ok {
+		return response.BadRequest(ctx, "Invalid store ID", nil)
+	}
+
+	// Panggil UseCase untuk update produk
+	ctrl.UseCase = ctrl.MakeUseCaseFunction()
+	err := ctrl.UseCase.UpdateProductStock(ctx.Context(), payload.Products, storeId)
+	if err != nil {
+		return response.SendResponse(ctx, err.Code, nil, err.Message)
+	}
+
+	return response.Success(ctx, "Successfully updated product", nil)
+}
+
 // GetProductDetail godoc
 // @Summary Get Product Detail
 // @Description Get Product Detail

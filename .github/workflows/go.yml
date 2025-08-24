@@ -22,9 +22,10 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.AZURE_USER }}@${{ secrets.AZURE_HOST }} << EOF
             cd ${{ secrets.AZURE_DEPLOY_PATH }}
+            sudo git checkout master
             sudo git reset --hard HEAD
-            sudo git pull
-            sudo go get github.com/susatyo441/go-ta-utils
+            sudo git pull origin master
+            go get github.com/susatyo441/go-ta-utils
             go build -o be-shop-vision -buildvcs=false
             sudo systemctl restart be-shop-vision
           EOF

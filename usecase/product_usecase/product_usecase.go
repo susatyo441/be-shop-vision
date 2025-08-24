@@ -21,6 +21,7 @@ type IProductUseCase interface {
 	GetProductDetail(ctx context.Context, productID primitive.ObjectID, storeID primitive.ObjectID) (interface{}, *entity.HttpError)
 	GetProductList(ctx context.Context, query dto.PaginationQuery, storeID primitive.ObjectID) (*utilDto.PaginationResult[model.Product], *entity.HttpError)
 	ExportAllData(ctx context.Context) ([]model.Product, []model.Category, []model.ProductPhoto, []model.Transaction, []model.Store, []model.User, error)
+	UpdateProductStock(ctx context.Context, bodies []productdto.UpdateProductStockDTO, storeID primitive.ObjectID) *entity.HttpError
 }
 
 type ProductUseCase struct {
